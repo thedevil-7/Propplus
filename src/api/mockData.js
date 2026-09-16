@@ -37,6 +37,81 @@ export const REGIONAL_LOCALITIES = {
     "Sukher",
     "Hiran Magri",
     "Shobhagpura"
+  ],
+  "Mumbai, Maharashtra": [
+    "Bandra West",
+    "Andheri West",
+    "Juhu",
+    "Worli",
+    "Powai",
+    "Lower Parel",
+    "Thane West"
+  ],
+  "Bengaluru, Karnataka": [
+    "Indiranagar",
+    "Koramangala",
+    "Whitefield",
+    "HSR Layout",
+    "Electronic City",
+    "Jayanagar",
+    "Hebbal"
+  ],
+  "Delhi, Delhi": [
+    "Connaught Place",
+    "Hauz Khas",
+    "Dwarka",
+    "Saket",
+    "Vasant Kunj",
+    "Rohini",
+    "Greater Kailash"
+  ],
+  "Delhi NCR": [
+    "DLF Cyber City (Gurugram)",
+    "Golf Course Road (Gurugram)",
+    "Sector 62 (Noida)",
+    "Sector 150 (Noida)",
+    "Indirapuram (Ghaziabad)",
+    "Dwarka Expressway"
+  ],
+  "Hyderabad, Telangana": [
+    "Gachibowli",
+    "Hitec City",
+    "Jubilee Hills",
+    "Banjara Hills",
+    "Madhapur",
+    "Kondapur"
+  ],
+  "Pune, Maharashtra": [
+    "Koregaon Park",
+    "Wakad",
+    "Baner",
+    "Kothrud",
+    "Viman Nagar",
+    "Hinjawadi"
+  ],
+  "Chennai, Tamil Nadu": [
+    "Adyar",
+    "Anna Nagar",
+    "Besant Nagar",
+    "OMR (IT Corridor)",
+    "T. Nagar",
+    "Velachery"
+  ],
+  "Ahmedabad, Gujarat": [
+    "SG Highway",
+    "Bopal",
+    "Satellite",
+    "Prahlad Nagar",
+    "Bodakdev",
+    "Thaltej"
+  ],
+  "Kolkata, West Bengal": [
+    "Salt Lake Sector V",
+    "New Town",
+    "Ballygunge",
+    "Alipore",
+    "Rajarhat",
+    "Park Street"
   ]
 };
 

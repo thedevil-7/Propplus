@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Sparkles,
   RotateCcw,
@@ -19,6 +19,7 @@ import { AIVision } from '../components/property/AIVision';
 import { FeatureImportanceChart } from '../components/charts/FeatureImportanceChart';
 import { propertyService } from '../api/propertyService';
 import { REGIONAL_LOCALITIES } from '../api/mockData';
+import { fetchIndianCities, getIndianCitiesSync } from '../api/cityService';
 
 const AMENITY_OPTIONS = [
   "Gym",
@@ -60,6 +61,20 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
 
   // Errors state
   const [errors, setErrors] = useState({});
+
+  // Indian Cities API state
+  const [citiesList, setCitiesList] = useState(() => getIndianCitiesSync());
+  const [isCitiesLoading, setIsCitiesLoading] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    fetchIndianCities().then((cities) => {
+      if (active && cities && cities.length > 0) {
+        setCitiesList(cities);
+      }
+    });
+    return () => { active = false; };
+  }, []);
 
   // Generated Prediction Result State
   const [predictionResult, setPredictionResult] = useState(null);
@@ -218,9 +233,16 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
                 {/* Location & Locality */}
                 <div className="form-grid-2col">
                   <div className="form-group">
-                    <label className="form-label">City / Region</label>
-                    <select
-                      className="form-select"
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                      <label className="form-label" style={{ margin: 0 }}>City / Region</label>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--accent-teal)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <Sparkles size={11} /> {citiesList.length} Indian Cities (API)
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      list="indian-cities-list"
+                      className={`form-input ${errors.location ? 'error' : ''}`}
                       value={location}
                       onChange={(e) => {
                         const newCity = e.target.value;
@@ -229,13 +251,15 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
                           setLocality(REGIONAL_LOCALITIES[newCity][0]);
                         }
                       }}
-                    >
-                      <option value="Jaipur, Rajasthan">Jaipur, Rajasthan</option>
-                      <option value="Jodhpur, Rajasthan">Jodhpur, Rajasthan</option>
-                      <option value="Kota, Rajasthan">Kota, Rajasthan</option>
-                      <option value="Udaipur, Rajasthan">Udaipur, Rajasthan</option>
-                      <option value="Delhi NCR">Delhi NCR</option>
-                    </select>
+                      placeholder="Type or select city (e.g. Jaipur, Mumbai, Bengaluru)..."
+                    />
+                    <datalist id="indian-cities-list">
+                      {citiesList.map((c) => (
+                        <option key={c.fullName} value={c.fullName}>
+                          {c.city} • {c.state} {c.district ? `(${c.district})` : ''}
+                        </option>
+                      ))}
+                    </datalist>
                     {errors.location && <span className="form-error-msg">{errors.location}</span>}
                   </div>
 
@@ -247,7 +271,7 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
                       className={`form-input ${errors.locality ? 'error' : ''}`}
                       value={locality}
                       onChange={(e) => setLocality(e.target.value)}
-                      placeholder="e.g. Shastri Nagar, Talwandi, C-Scheme"
+                      placeholder="e.g. Shastri Nagar, Bandra, C-Scheme, Whitefield"
                     />
                     <datalist id="localities-list">
                       {(REGIONAL_LOCALITIES[location] || []).map((loc) => (
@@ -258,9 +282,44 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
                   </div>
                 </div>
 
+                {/* Quick Metro City Selector Chips */}
+                <div style={{ marginBottom: '0.85rem', marginTop: '-0.35rem' }}>
+                  <span style={{ fontSize: '0.73rem', color: 'var(--text-tertiary)', display: 'block', marginBottom: '0.35rem' }}>
+                    Quick Select Key Markets:
+                  </span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                    {[
+                      { name: "Jaipur", full: "Jaipur, Rajasthan" },
+                      { name: "Jodhpur", full: "Jodhpur, Rajasthan" },
+                      { name: "Kota", full: "Kota, Rajasthan" },
+                      { name: "Udaipur", full: "Udaipur, Rajasthan" },
+                      { name: "Mumbai", full: "Mumbai, Maharashtra" },
+                      { name: "Bengaluru", full: "Bengaluru, Karnataka" },
+                      { name: "Delhi NCR", full: "Delhi NCR" },
+                      { name: "Hyderabad", full: "Hyderabad, Telangana" },
+                      { name: "Pune", full: "Pune, Maharashtra" }
+                    ].map((m) => (
+                      <button
+                        type="button"
+                        key={m.name}
+                        className={`toggle-chip ${location.toLowerCase().includes(m.name.toLowerCase()) ? 'active' : ''}`}
+                        style={{ padding: '0.2rem 0.55rem', fontSize: '0.73rem' }}
+                        onClick={() => {
+                          setLocation(m.full);
+                          if (REGIONAL_LOCALITIES[m.full]) {
+                            setLocality(REGIONAL_LOCALITIES[m.full][0]);
+                          }
+                        }}
+                      >
+                        {m.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Quick Locality Suggestion Chips */}
                 {REGIONAL_LOCALITIES[location] && (
-                  <div style={{ marginBottom: '1.25rem', marginTop: '-0.5rem' }}>
+                  <div style={{ marginBottom: '1.25rem' }}>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.35rem' }}>
                       Popular {location.split(',')[0]} Localities:
                     </span>

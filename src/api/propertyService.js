@@ -40,7 +40,14 @@ const persistHistory = (list) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
   } catch (e) {
-    console.warn("Storage write error", e);
+    console.warn("Storage write error, attempting quota recovery", e);
+    try {
+      // If quota exceeded, trim older items and keep latest 30 records
+      const trimmed = list.slice(0, 30);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
+    } catch (retryError) {
+      console.warn("Storage quota recovery failed", retryError);
+    }
   }
 };
 
@@ -53,12 +60,58 @@ export const propertyService = {
     // Simulated asynchronous latency
     await new Promise((resolve) => setTimeout(resolve, 600));
 
-    const area = parseFloat(propertyData.area) || 1800;
-    const locLower = (propertyData.location || "").toLowerCase();
-    const localityLower = (propertyData.locality || "").toLowerCase();
+    // Strict input sanitization and boundary clamping
+    const parsedArea = parseFloat(propertyData.area);
+    const area = (!isNaN(parsedArea) && parsedArea > 0) ? Math.min(100000, parsedArea) : 1800;
+    const cleanLocation = String(propertyData.location || "Jaipur, Rajasthan").trim().slice(0, 120);
+    const cleanLocality = String(propertyData.locality || "C-Scheme").trim().slice(0, 120);
+    const cleanType = String(propertyData.propertyType || "Villa").trim().slice(0, 60);
+    const cleanFurnishing = ["Furnished", "Semi-Furnished", "Unfurnished"].includes(propertyData.furnishing)
+      ? propertyData.furnishing
+      : "Furnished";
 
-    let cityBase = 3500;
-    if (locLower.includes("jodhpur")) {
+    const locLower = cleanLocation.toLowerCase();
+    const localityLower = cleanLocality.toLowerCase();
+
+    let cityBase = 3800; // Default Tier-2 / Tier-3 benchmark
+    if (locLower.includes("mumbai") || locLower.includes("thane") || locLower.includes("navi mumbai")) {
+      cityBase = 18500;
+      if (localityLower.includes("bandra") || localityLower.includes("worli") || localityLower.includes("juhu")) cityBase += 8500;
+      else if (localityLower.includes("andheri") || localityLower.includes("powai")) cityBase += 3500;
+    } else if (locLower.includes("delhi") || locLower.includes("gurugram") || locLower.includes("noida") || locLower.includes("ncr")) {
+      cityBase = 11500;
+      if (localityLower.includes("golf") || localityLower.includes("cyber") || localityLower.includes("connaught")) cityBase += 4500;
+      else if (localityLower.includes("hauz") || localityLower.includes("saket")) cityBase += 2500;
+    } else if (locLower.includes("bengaluru") || locLower.includes("bangalore")) {
+      cityBase = 9800;
+      if (localityLower.includes("indiranagar") || localityLower.includes("koramangala")) cityBase += 3200;
+      else if (localityLower.includes("whitefield") || localityLower.includes("hsr")) cityBase += 1500;
+    } else if (locLower.includes("hyderabad")) {
+      cityBase = 8400;
+      if (localityLower.includes("jubilee") || localityLower.includes("banjara")) cityBase += 3500;
+      else if (localityLower.includes("hitec") || localityLower.includes("gachibowli")) cityBase += 1800;
+    } else if (locLower.includes("pune")) {
+      cityBase = 7600;
+      if (localityLower.includes("koregaon") || localityLower.includes("baner")) cityBase += 2000;
+      else if (localityLower.includes("wakad") || localityLower.includes("hinjawadi")) cityBase += 1000;
+    } else if (locLower.includes("chennai")) {
+      cityBase = 7400;
+      if (localityLower.includes("adyar") || localityLower.includes("boat club")) cityBase += 3000;
+    } else if (locLower.includes("kolkata")) {
+      cityBase = 6200;
+      if (localityLower.includes("alipore") || localityLower.includes("ballygunge")) cityBase += 2500;
+    } else if (locLower.includes("ahmedabad") || locLower.includes("gandhinagar") || locLower.includes("surat")) {
+      cityBase = 5800;
+      if (localityLower.includes("bodakdev") || localityLower.includes("sg highway")) cityBase += 1500;
+    } else if (locLower.includes("chandigarh")) {
+      cityBase = 8200;
+    } else if (locLower.includes("kochi") || locLower.includes("thiruvananthapuram")) {
+      cityBase = 5400;
+    } else if (locLower.includes("lucknow") || locLower.includes("kanpur") || locLower.includes("varanasi")) {
+      cityBase = 4600;
+    } else if (locLower.includes("indore") || locLower.includes("bhopal")) {
+      cityBase = 4800;
+    } else if (locLower.includes("jodhpur")) {
       cityBase = 3200;
       if (localityLower.includes("shastri")) cityBase += 160;
       else if (localityLower.includes("sardar")) cityBase += 190;
@@ -82,8 +135,11 @@ export const propertyService = {
       else if (localityLower.includes("mansarovar")) cityBase -= 150;
     }
 
-    const bedrooms = parseInt(propertyData.bedrooms) || 3;
-    const bathrooms = parseInt(propertyData.bathrooms) || 2;
+    const bedrooms = Math.max(0, Math.min(25, parseInt(propertyData.bedrooms, 10) || 3));
+    const bathrooms = Math.max(0, Math.min(25, parseInt(propertyData.bathrooms, 10) || 2));
+    const floors = Math.max(1, Math.min(50, parseInt(propertyData.floors, 10) || 2));
+    const age = Math.max(0, Math.min(100, parseInt(propertyData.age, 10) || 1));
+    const parking = Math.max(0, Math.min(50, parseInt(propertyData.parking, 10) || 2));
     const amenitiesBonus = (propertyData.amenities?.length || 4) * 0.45;
     
     // Dynamic calculation simulating ML regression
@@ -96,19 +152,19 @@ export const propertyService = {
 
     const newRecord = {
       id: "prop-" + Date.now(),
-      title: `${bedrooms} BHK ${propertyData.propertyType || "Villa"}`,
-      type: propertyData.propertyType || "Villa",
-      location: propertyData.location || "Jaipur, Rajasthan",
-      locality: propertyData.locality || "C-Scheme",
+      title: `${bedrooms} BHK ${cleanType}`,
+      type: cleanType,
+      location: cleanLocation,
+      locality: cleanLocality,
       area: area,
       bedrooms: bedrooms,
       bathrooms: bathrooms,
-      floors: parseInt(propertyData.floors) || 2,
-      age: parseInt(propertyData.age) || 1,
-      parking: parseInt(propertyData.parking) || 2,
-      furnishing: propertyData.furnishing || "Furnished",
+      floors: floors,
+      age: age,
+      parking: parking,
+      furnishing: cleanFurnishing,
       balcony: Boolean(propertyData.balcony),
-      amenities: propertyData.amenities || ["Security", "Power Backup", "CCTV"],
+      amenities: Array.isArray(propertyData.amenities) ? propertyData.amenities : ["Security", "Power Backup", "CCTV"],
       predictedValue: totalValueLakhs,
       priceRange: [lowBound, highBound],
       pricePerSqFt: calculatedRate,

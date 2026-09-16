@@ -45,6 +45,10 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
     else if (estCity === 'mumbai') baseRate = 22000;
     else if (estCity === 'delhi') baseRate = 12500;
     else if (estCity === 'bengaluru') baseRate = 9800;
+    else if (estCity === 'hyderabad') baseRate = 8400;
+    else if (estCity === 'pune') baseRate = 7800;
+    else if (estCity === 'chennai') baseRate = 7400;
+    else if (estCity === 'ahmedabad') baseRate = 5800;
 
     const totalVal = Math.round((areaNum * baseRate) / 100000); // in Lakhs
     const inCr = (totalVal / 100).toFixed(2);
@@ -204,6 +208,10 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                     <option value="mumbai">Mumbai MMR</option>
                     <option value="bengaluru">Bengaluru Tech Hubs</option>
                     <option value="delhi">Delhi NCR / Gurugram</option>
+                    <option value="hyderabad">Hyderabad (HITEC & Financial Dist)</option>
+                    <option value="pune">Pune (IT Corridor & West)</option>
+                    <option value="chennai">Chennai (OMR Corridor)</option>
+                    <option value="ahmedabad">Ahmedabad (SG Highway)</option>
                   </select>
                 </div>
               </div>

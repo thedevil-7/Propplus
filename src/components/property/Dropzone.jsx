@@ -1,15 +1,32 @@
 import React, { useRef, useState } from 'react';
 import { UploadCloud, Image as ImageIcon, Trash2, Star, CheckCircle } from 'lucide-react';
 
+const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024; // 15MB limit
+const MAX_TOTAL_IMAGES = 10;
+
 export const Dropzone = ({ images = [], setImages, primaryIdx = 0, setPrimaryIdx }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleFiles = (files) => {
-    const validFiles = Array.from(files).filter((file) =>
-      ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'].includes(file.type)
-    );
+    setErrorMessage(null);
+    const fileList = Array.from(files);
+
+    if (images.length + fileList.length > MAX_TOTAL_IMAGES) {
+      setErrorMessage(`Maximum ${MAX_TOTAL_IMAGES} images allowed. Please remove existing ones first.`);
+      return;
+    }
+
+    const validFiles = fileList.filter((file) => {
+      const isAllowedType = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'].includes(file.type);
+      const isUnderSize = file.size <= MAX_FILE_SIZE_BYTES;
+      if (!isUnderSize) {
+        setErrorMessage(`File "${file.name}" exceeds the 15MB size limit.`);
+      }
+      return isAllowedType && isUnderSize;
+    });
 
     if (!validFiles.length) return;
 
@@ -39,6 +56,10 @@ export const Dropzone = ({ images = [], setImages, primaryIdx = 0, setPrimaryIdx
 
   const handleRemoveImage = (indexToRemove, e) => {
     e.stopPropagation();
+    const urlToRemove = images[indexToRemove];
+    if (urlToRemove && urlToRemove.startsWith('blob:')) {
+      URL.revokeObjectURL(urlToRemove);
+    }
     setImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
     if (primaryIdx === indexToRemove) {
       setPrimaryIdx(0);
@@ -78,8 +99,14 @@ export const Dropzone = ({ images = [], setImages, primaryIdx = 0, setPrimaryIdx
         <h4 className="dropzone-title">Upload Property Photos</h4>
         <p className="dropzone-subtitle">Drag and drop images here or browse files</p>
         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-          Supported: JPG, JPEG, PNG, WEBP (Multiple uploads enabled)
+          Supported: JPG, PNG, WEBP • Max 15MB each • Up to 10 images
         </span>
+
+        {errorMessage && (
+          <div style={{ marginTop: '0.65rem', color: 'var(--status-negative)', fontSize: '0.8rem', fontWeight: 500 }}>
+            {errorMessage}
+          </div>
+        )}
 
         {uploadProgress !== null && (
           <div style={{ marginTop: '1rem', width: '100%', maxWidth: '240px', margin: '1rem auto 0' }}>

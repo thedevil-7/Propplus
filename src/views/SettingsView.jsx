@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { User, Sliders, Palette, BrainCircuit, Check, Sun, Moon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Sliders, Palette, BrainCircuit, Check, Sun, Moon, Sparkles } from 'lucide-react';
+import { fetchIndianCities, getIndianCitiesSync } from '../api/cityService';
 
 export const SettingsView = ({
   theme,
@@ -15,6 +16,17 @@ export const SettingsView = ({
   const [currency, setCurrency] = useState("INR");
   const [defaultCity, setDefaultCity] = useState("Jaipur, Rajasthan");
   const [emailNotifications, setEmailNotifications] = useState(true);
+  const [citiesList, setCitiesList] = useState(() => getIndianCitiesSync());
+
+  useEffect(() => {
+    let active = true;
+    fetchIndianCities().then((cities) => {
+      if (active && cities && cities.length > 0) {
+        setCitiesList(cities);
+      }
+    });
+    return () => { active = false; };
+  }, []);
 
   const handleSaveProfile = (e) => {
     e.preventDefault();
@@ -98,13 +110,27 @@ export const SettingsView = ({
           </div>
 
           <div className="form-group">
-            <label className="form-label">Default Region / City</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+              <label className="form-label" style={{ margin: 0 }}>Default Region / City</label>
+              <span style={{ fontSize: '0.72rem', color: 'var(--accent-teal)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <Sparkles size={11} /> {citiesList.length} Cities
+              </span>
+            </div>
             <input
               type="text"
+              list="settings-cities-list"
               className="form-input"
               value={defaultCity}
               onChange={(e) => setDefaultCity(e.target.value)}
+              placeholder="e.g. Jaipur, Rajasthan"
             />
+            <datalist id="settings-cities-list">
+              {citiesList.map((c) => (
+                <option key={c.fullName} value={c.fullName}>
+                  {c.city} • {c.state}
+                </option>
+              ))}
+            </datalist>
           </div>
         </div>
 
