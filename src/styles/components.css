@@ -1081,7 +1081,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
 }
 
@@ -1112,6 +1112,10 @@
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
 }
 
 .toggle-chip:hover {
@@ -1124,6 +1128,7 @@
   border-color: var(--primary-600);
   color: #FFFFFF;
   font-weight: 600;
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.3);
 }
 
 /* Color Circle Pickers */

@@ -1,0 +1,155 @@
+{
+  "dataset": "House Price India",
+  "sample_count": 14619,
+  "target": "price",
+  "features": [
+    "number_of_bedrooms",
+    "number_of_bathrooms",
+    "living_area",
+    "lot_area",
+    "number_of_floors",
+    "waterfront_present",
+    "number_of_views",
+    "condition_of_the_house",
+    "grade_of_the_house",
+    "area_of_the_house_excluding_basement",
+    "area_of_the_basement",
+    "built_year",
+    "renovation_year",
+    "postal_code",
+    "lattitude",
+    "longitude",
+    "living_area_renov",
+    "lot_area_renov",
+    "number_of_schools_nearby",
+    "distance_from_the_airport"
+  ],
+  "best_model": "XGBoost Regressor",
+  "metrics": {
+    "Naive Mean Baseline": {
+      "RMSE": 384703.8454573581,
+      "MAE": 240168.98734610123,
+      "MAPE": 0.5507180245702722,
+      "R2": -6.602333380234526e-06,
+      "Train_R2": 0.0
+    },
+    "Linear Regression": {
+      "CV_R2 (5-Fold)": 0.699,
+      "CV_RMSE (5-Fold)": 198700.64,
+      "Train_R2": 0.7025,
+      "Test_R2": 0.702,
+      "RMSE": 210022.36,
+      "MAE": 125379.66,
+      "MAPE": 0.2508
+    },
+    "Ridge Regression": {
+      "CV_R2 (5-Fold)": 0.6986,
+      "CV_RMSE (5-Fold)": 198819.37,
+      "Train_R2": 0.7022,
+      "Test_R2": 0.7013,
+      "RMSE": 210263.69,
+      "MAE": 125131.07,
+      "MAPE": 0.2497
+    },
+    "Random Forest": {
+      "CV_R2 (5-Fold)": 0.8615,
+      "CV_RMSE (5-Fold)": 134682.42,
+      "Train_R2": 0.9776,
+      "Test_R2": 0.8803,
+      "RMSE": 133114.12,
+      "MAE": 70151.97,
+      "MAPE": 0.1292
+    },
+    "XGBoost Regressor": {
+      "CV_R2 (5-Fold)": 0.8684,
+      "CV_RMSE (5-Fold)": 131173.05,
+      "Train_R2": 0.9736,
+      "Test_R2": 0.9128,
+      "RMSE": 113603.21,
+      "MAE": 64451.68,
+      "MAPE": 0.1216
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "grade_of_the_house",
+      "importance": 38.32
+    },
+    {
+      "feature": "living_area",
+      "importance": 15.47
+    },
+    {
+      "feature": "waterfront_present",
+      "importance": 14.61
+    },
+    {
+      "feature": "lattitude",
+      "importance": 6.93
+    },
+    {
+      "feature": "number_of_views",
+      "importance": 3.8
+    },
+    {
+      "feature": "longitude",
+      "importance": 3.21
+    },
+    {
+      "feature": "postal_code",
+      "importance": 2.6
+    },
+    {
+      "feature": "built_year",
+      "importance": 2.43
+    },
+    {
+      "feature": "renovation_year",
+      "importance": 2.27
+    },
+    {
+      "feature": "living_area_renov",
+      "importance": 2.18
+    },
+    {
+      "feature": "number_of_bathrooms",
+      "importance": 1.8
+    },
+    {
+      "feature": "area_of_the_house_excluding_basement",
+      "importance": 1.57
+    },
+    {
+      "feature": "condition_of_the_house",
+      "importance": 0.93
+    },
+    {
+      "feature": "area_of_the_basement",
+      "importance": 0.81
+    },
+    {
+      "feature": "lot_area_renov",
+      "importance": 0.79
+    },
+    {
+      "feature": "lot_area",
+      "importance": 0.75
+    },
+    {
+      "feature": "number_of_floors",
+      "importance": 0.57
+    },
+    {
+      "feature": "number_of_bedrooms",
+      "importance": 0.43
+    },
+    {
+      "feature": "distance_from_the_airport",
+      "importance": 0.3
+    },
+    {
+      "feature": "number_of_schools_nearby",
+      "importance": 0.25
+    }
+  ]
+}

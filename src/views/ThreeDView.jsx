@@ -35,18 +35,18 @@ export const ThreeDView = ({ property, setCurrentView }) => {
       <ThreeDViewer property={property} height="640px" isHero={false} />
 
       {/* Helper Tips */}
-      <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+      <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
         <div className="card" style={{ padding: '1.25rem' }}>
-          <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.35rem', color: 'var(--accent-blue)' }}>Orbit & Pan</h4>
-          <p style={{ fontSize: '0.85rem' }}>Left-click and drag to orbit around the residence. Scroll wheel to zoom dynamically in and out.</p>
+          <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.35rem', color: 'var(--accent-blue)' }}>Orbit & Smooth Presets</h4>
+          <p style={{ fontSize: '0.85rem' }}>Left-click and drag to orbit with smooth camera inertia. Click Front, Rear, Aerial, or Interior to glide inside the living room.</p>
         </div>
         <div className="card" style={{ padding: '1.25rem' }}>
-          <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.35rem', color: 'var(--accent-blue)' }}>Camera Presets</h4>
-          <p style={{ fontSize: '0.85rem' }}>Use the top-left pills to snap directly to Elevation Front, Rear, Aerial Top-Down, or Interior perspective.</p>
+          <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.35rem', color: 'var(--accent-blue)' }}>Architectural Massing & Roofs</h4>
+          <p style={{ fontSize: '0.85rem' }}>Switch between Modern Villa, Classic Manor, Luxury Glasshouse, and Minimalist Cube, plus authentic flat terrace or pitched roofs.</p>
         </div>
         <div className="card" style={{ padding: '1.25rem' }}>
-          <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.35rem', color: 'var(--accent-blue)' }}>Live Customizer</h4>
-          <p style={{ fontSize: '0.85rem' }}>Toggle exterior stucco colors, pool presence, garden landscaping, and garage bays with instant WebGL shader update.</p>
+          <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.35rem', color: 'var(--accent-blue)' }}>Solar & Lighting Simulation</h4>
+          <p style={{ fontSize: '0.85rem' }}>Simulate real-time sun angles: Crisp Day, Sunset Golden Hour, Twilight Blue Hour, and Night with glowing windows and underwater pool lights.</p>
         </div>
       </div>
     </div>

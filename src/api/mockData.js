@@ -404,58 +404,58 @@ export const DEMO_PROPERTIES = [
 ];
 
 export const KPI_DATA = {
-  propertiesAnalyzed: 1482,
-  averageEstimatedValue: "₹65.8L",
+  propertiesAnalyzed: 14619,
+  averageEstimatedValue: "₹54.2L",
   averagePricePerSqFt: "₹3,540",
-  modelPerformanceR2: "89%",
+  modelPerformanceR2: "91.3%",
   trends: {
-    analyzedChange: "+18.5% this month",
-    valueChange: "+4.2% across Rajasthan hubs",
-    sqftChange: "+6.3% YoY average",
-    r2ScoreStatus: "High confidence baseline"
+    analyzedChange: "+14,619 records trained",
+    valueChange: "+3.8% across Indian markets",
+    sqftChange: "+6.1% YoY average",
+    r2ScoreStatus: "Trained XGBoost Regressor (5-Fold CV)"
   }
 };
 
 export const FEATURE_IMPORTANCE = [
   {
-    feature: "Area (Square Feet)",
-    importance: 40,
-    explanation: "Larger properties in this micro-market historically correlate with higher overall valuation due to space scarcity."
+    feature: "House Grade & Spec",
+    importance: 38,
+    explanation: "Architectural finish and construction grade account for 38.3% of valuation variance across the trained dataset."
   },
   {
-    feature: "Location & Locality",
-    importance: 30,
-    explanation: "Locality tier (e.g. C-Scheme in Jaipur, Shastri Nagar in Jodhpur, or Talwandi in Kota) dictates the baseline square-foot rate."
+    feature: "Living Area (Sq Ft)",
+    importance: 16,
+    explanation: "Carpet living area serves as the primary linear foundation for base residential utility (15.5% importance)."
   },
   {
-    feature: "Bedrooms (BHK)",
+    feature: "Waterfront Presence",
     importance: 15,
-    explanation: "3 and 4 BHK configurations match the primary buyer demographic demand curve across major urban centres."
+    explanation: "Scenic waterfront access commands an immediate luxury price premium in the trained tree ensemble (14.6% importance)."
   },
   {
-    feature: "Bathrooms",
-    importance: 8,
-    explanation: "Ensuite and modern sanitary layouts provide an elevated liquidity premium."
+    feature: "Geographic Coordinates",
+    importance: 10,
+    explanation: "Micro-location latitude and longitude capture neighborhood prestige and commercial connectivity (10.1% combined)."
   },
   {
-    feature: "Property Age",
+    feature: "Views & Elevation",
+    importance: 4,
+    explanation: "High floor clearance and panoramic open views yield strong buyer preference (3.8% importance)."
+  },
+  {
+    feature: "Age & Renovation Status",
     importance: 5,
-    explanation: "Properties under 5 years old experience negligible structural depreciation impact."
-  },
-  {
-    feature: "Dedicated Parking",
-    importance: 2,
-    explanation: "Covered dedicated 2-car slots ensure steady tenant retention and resale appeal."
+    explanation: "Construction year and recent renovations insulate property values from structural depreciation (4.7% combined)."
   }
 ];
 
 export const MODEL_METRICS = {
-  r2Score: "89%",
-  r2Tooltip: "Coefficient of determination (R²): Measures how well unseen property pricing variations are explained by the trained model (89% explanatory power across regional comps).",
-  mae: "₹3.2L",
-  maeTooltip: "Mean Absolute Error: The average absolute price deviation between predicted valuation and verified closing sales is ₹3.2 Lakhs.",
-  rmse: "₹4.7L",
-  rmseTooltip: "Root Mean Squared Error: Penalizes larger valuation discrepancies, standing at ₹4.7 Lakhs across historical cross-validation sets."
+  r2Score: "91.3%",
+  r2Tooltip: "Coefficient of determination (R²): Measures how well unseen property pricing variations are explained by the trained XGBoost model (91.28% test accuracy across 2,924 holdout houses).",
+  mae: "₹64.5K",
+  maeTooltip: "Mean Absolute Error: The average absolute difference between predicted valuation and actual transaction prices is only ₹64,452.",
+  rmse: "₹1.14L",
+  rmseTooltip: "Root Mean Squared Error: Cross-validation RMSE of ₹1.14 Lakhs penalizes edge-case discrepancies across 14,619 housing records."
 };
 
 export const MARKET_INSIGHTS = {
