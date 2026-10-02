@@ -3,7 +3,7 @@ import { DEMO_PROPERTIES } from '../api/mockData';
 import { PropertyCard } from '../components/property/PropertyCard';
 import { Filter, Search } from 'lucide-react';
 
-export const SimilarView = ({ onSelectProperty, onOpen3D }) => {
+export const SimilarView = ({ onSelectProperty }) => {
   const [filterType, setFilterType] = useState('All');
   const [filterCity, setFilterCity] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -74,7 +74,7 @@ export const SimilarView = ({ onSelectProperty, onOpen3D }) => {
             key={prop.id}
             property={prop}
             onSelectProperty={onSelectProperty}
-            onOpen3D={onOpen3D}
+
             show3DButton={true}
           />
         ))}

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { propertyService } from '../api/propertyService';
 import { Gallery } from '../components/property/Gallery';
-import { ThreeDViewer } from '../components/3d/ThreeDViewer';
+
 import { FeatureImportanceChart } from '../components/charts/FeatureImportanceChart';
 import {
   MapPin,
@@ -20,6 +21,17 @@ import {
 export const PropertyDetailView = ({ property, onBack, setCurrentView }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isFavorite, setIsFavorite] = useState(property?.isFavorite || false);
+  const [priceHistory, setPriceHistory] = useState(null);
+
+  useEffect(() => {
+    if (property) {
+      propertyService.getPriceHistory(property.id).then(res => {
+        setPriceHistory(res);
+      }).catch(err => {
+        setPriceHistory({ available: false, years_available: 0, data: [] });
+      });
+    }
+  }, [property]);
 
   if (!property) return null;
 
@@ -123,9 +135,10 @@ export const PropertyDetailView = ({ property, onBack, setCurrentView }) => {
         {[
           { id: 'overview', label: 'Overview' },
           { id: 'photos', label: 'Photos & Media' },
-          { id: '3dview', label: '3D View' },
+          { id: '2dplan', label: '2D Floor Plan' },
           { id: 'valuation', label: 'AI Valuation' },
-          { id: 'comparison', label: 'Market Comparison' }
+          { id: 'comparison', label: 'Market Comparison' },
+          { id: 'history', label: 'Price History' }
         ].map((t) => (
           <button
             key={t.id}
@@ -190,9 +203,29 @@ export const PropertyDetailView = ({ property, onBack, setCurrentView }) => {
         <Gallery images={property.gallery} defaultImage={property.imageUrl} />
       )}
 
-      {/* TAB CONTENT: 3D VIEW */}
-      {activeTab === '3dview' && (
-        <ThreeDViewer property={property} height="580px" />
+      {/* TAB CONTENT: 2D FLOOR PLAN */}
+      {activeTab === '2dplan' && (
+        <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
+          <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>2D Floor Plan</h3>
+          {property.floorPlanUrl ? (
+            <div style={{ position: 'relative', display: 'inline-block', maxWidth: '100%' }}>
+              <img 
+                src={property.floorPlanUrl} 
+                alt="2D Floor Plan" 
+                style={{ maxWidth: '100%', maxHeight: '600px', objectFit: 'contain', border: '1px solid var(--border-subtle)', borderRadius: '8px' }} 
+              />
+              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '1rem' }}>
+                <button className="btn btn-secondary btn-sm">Zoom In</button>
+                <button className="btn btn-secondary btn-sm">Zoom Out</button>
+                <button className="btn btn-secondary btn-sm" onClick={() => window.open(property.floorPlanUrl, '_blank')}>Fullscreen</button>
+              </div>
+            </div>
+          ) : (
+            <div style={{ padding: '3rem', color: 'var(--text-muted)' }}>
+              No floor plan uploaded for this property.
+            </div>
+          )}
+        </div>
       )}
 
       {/* TAB CONTENT: AI VALUATION */}
@@ -245,6 +278,22 @@ export const PropertyDetailView = ({ property, onBack, setCurrentView }) => {
             </p>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>MAE ₹3.2L on cross validation</span>
           </div>
+        </div>
+      )}
+
+      {/* TAB CONTENT: PRICE HISTORY */}
+      {activeTab === 'history' && (
+        <div className="card" style={{ padding: '2rem' }}>
+          <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>House Price History (Last 3 Years)</h3>
+          {priceHistory && priceHistory.available ? (
+            <div>
+              <p>Historical price data exists. (Chart would go here)</p>
+            </div>
+          ) : (
+            <div style={{ color: 'var(--text-muted)' }}>
+              Historical price data is not available for this property/location yet.
+            </div>
+          )}
         </div>
       )}
     </div>

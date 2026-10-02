@@ -23,16 +23,17 @@ export const Navbar = ({
   theme,
   setTheme,
   onOpenSearch,
-  unreadNotifications = 2
+  unreadNotifications = 2,
+  userRole,
+  setUserRole
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
     { id: 'landing', label: 'Home', icon: Home },
     { id: 'predict', label: 'Predict', icon: Sparkles },
-    { id: 'floorplan', label: '3D & Floor Plan', icon: Layout },
+    { id: 'floorplan', label: '2D Floor Plan', icon: Layout },
     { id: 'dashboard', label: 'Dashboard', icon: Compass },
-    { id: 'threed', label: '3D Explorer', icon: Box },
     { id: 'insights', label: 'Market Insights', icon: TrendingUp },
     { id: 'properties', label: 'Properties', icon: Building2 },
     { id: 'history', label: 'History', icon: History }
@@ -96,6 +97,25 @@ export const Navbar = ({
 
           {/* Right Action Icons */}
           <div className="nav-actions">
+            <select 
+              value={userRole}
+              onChange={(e) => setUserRole(e.target.value)}
+              style={{
+                background: 'var(--bg-surface-elevated)',
+                color: 'var(--text-primary)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '6px',
+                padding: '4px 8px',
+                fontSize: '0.85rem',
+                marginRight: '0.5rem',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="admin">Admin</option>
+              <option value="customer_free">Customer (Free)</option>
+              <option value="customer_premium">Customer (Premium)</option>
+            </select>
+
             <button
               className="icon-button hide-mobile"
               onClick={onOpenSearch}
@@ -115,14 +135,7 @@ export const Navbar = ({
               {unreadNotifications > 0 && <span className="notification-badge-dot" />}
             </button>
 
-            <button
-              className="icon-button"
-              onClick={toggleTheme}
-              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-              aria-label="Toggle Theme"
-            >
-              {theme === 'dark' ? <Sun size={18} color="#F59E0B" /> : <Moon size={18} color="#6366F1" />}
-            </button>
+
 
             <div
               className="user-avatar"

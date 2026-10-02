@@ -4,51 +4,53 @@
 
 :root {
   /* Font Families */
-  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Color Palette - Dark Theme Defaults */
-  --bg-app: #090E1A;
-  --bg-surface: #0F172A;
-  --bg-surface-elevated: #162036;
-  --bg-surface-hover: #1E2B48;
-  --bg-glass: rgba(15, 23, 42, 0.75);
-  --bg-glass-subtle: rgba(255, 255, 255, 0.03);
+  /* Color Palette - Premium Real Estate Theme */
+  --bg-app: #F7F8FC;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #FCFCFF;
+  --bg-surface-secondary: #EEF1F7;
+  --bg-glass: rgba(255, 255, 255, 0.9);
+  --bg-glass-subtle: rgba(255, 255, 255, 0.4);
 
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-medium: rgba(255, 255, 255, 0.14);
-  --border-focus: #38BDF8;
+  --border-subtle: #DCE1EB;
+  --border-medium: #B9C5DD;
+  --border-focus: #6B82D8;
 
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --text-inverse: #090E1A;
+  --text-primary: #172033;
+  --text-secondary: #5D6678;
+  --text-muted: #8992A3;
+  --text-inverse: #FFFFFF;
 
   /* Brand Accents */
-  --primary-500: #6366F1;
-  --primary-600: #4F46E5;
-  --primary-glow: rgba(99, 102, 241, 0.25);
+  --primary-500: #3157C7; /* Royal Blue */
+  --primary-600: #243B7A; /* Deep Royal Blue */
+  --primary-900: #18264A; /* Royal Navy */
+  --primary-glow: rgba(49, 87, 199, 0.15);
 
-  --accent-cyan: #06B6D4;
-  --accent-blue: #38BDF8;
-  --accent-violet: #8B5CF6;
-  --accent-emerald: #10B981;
-  --accent-amber: #F59E0B;
-  --accent-rose: #F43F5E;
+  --accent-cyan: #3157C7; /* Mapped to Royal Blue for legacy comp */
+  --accent-blue: #4B6FE8; /* Bright Royal Accent */
+  --accent-violet: #E8EDFF; /* Soft Royal Blue */
+  
+  --accent-amber: #C9A227; /* Warm Gold */
+  --accent-emerald: #2F8F72;
+  --accent-rose: #C94C4C;
 
   /* Status Colors */
-  --status-positive: #10B981;
-  --status-positive-bg: rgba(16, 185, 129, 0.12);
-  --status-negative: #F43F5E;
-  --status-negative-bg: rgba(244, 63, 94, 0.12);
-  --status-warning: #F59E0B;
-  --status-warning-bg: rgba(245, 158, 11, 0.12);
+  --status-positive: #2F8F72; /* Success */
+  --status-positive-bg: #E5F4EF;
+  --status-negative: #C94C4C; /* Error */
+  --status-negative-bg: rgba(201, 76, 76, 0.12);
+  --status-warning: #C9A227; /* Warning */
+  --status-warning-bg: #FBF6DF;
 
   /* Shadows & Elevation */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
-  --shadow-glow: 0 0 30px rgba(56, 189, 248, 0.15);
+  --shadow-sm: 0 2px 8px rgba(24, 38, 74, 0.05);
+  --shadow-md: 0 8px 24px rgba(24, 38, 74, 0.08);
+  --shadow-lg: 0 16px 40px rgba(24, 38, 74, 0.12);
+  --shadow-glow: 0 0 30px rgba(49, 87, 199, 0.15);
 
   /* Radii */
   --radius-sm: 6px;
@@ -61,34 +63,6 @@
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 350ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Light Theme Variables */
-[data-theme="light"] {
-  --bg-app: #F8FAFC;
-  --bg-surface: #FFFFFF;
-  --bg-surface-elevated: #F1F5F9;
-  --bg-surface-hover: #E2E8F0;
-  --bg-glass: rgba(255, 255, 255, 0.85);
-  --bg-glass-subtle: rgba(0, 0, 0, 0.02);
-
-  --border-subtle: rgba(0, 0, 0, 0.08);
-  --border-medium: rgba(0, 0, 0, 0.14);
-  --border-focus: #0284C7;
-
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #94A3B8;
-  --text-inverse: #FFFFFF;
-
-  --primary-500: #4F46E5;
-  --primary-600: #4338CA;
-  --primary-glow: rgba(79, 70, 229, 0.15);
-
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
-  --shadow-glow: 0 0 30px rgba(2, 132, 199, 0.12);
 }
 
 /* Base Reset */
@@ -155,7 +129,7 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-surface-hover);
+  background: var(--border-medium);
   border-radius: var(--radius-full);
 }
 
@@ -201,13 +175,13 @@ button {
 }
 
 .badge-ai {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(56, 189, 248, 0.2));
-  color: var(--accent-blue);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: var(--accent-violet);
+  color: var(--primary-500);
+  border: 1px solid var(--border-subtle);
 }
 
 .badge-demo {
-  background: rgba(245, 158, 11, 0.15);
+  background: var(--status-warning-bg);
   color: var(--accent-amber);
   border: 1px solid rgba(245, 158, 11, 0.3);
   font-size: 0.7rem;
@@ -232,42 +206,53 @@ button {
   padding: 0.75rem 1.4rem;
   font-weight: 600;
   font-size: 0.92rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-md); /* 10-12px as requested */
   transition: all var(--transition-fast);
   text-align: center;
   white-space: nowrap;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  background: var(--primary-500);
   color: #FFFFFF;
   box-shadow: 0 4px 14px var(--primary-glow);
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+  background: var(--primary-600);
+  box-shadow: 0 6px 20px rgba(49, 87, 199, 0.4);
 }
 
 .btn-secondary {
-  background: var(--bg-surface-elevated);
-  color: var(--text-primary);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--primary-900);
+  border: 1px solid var(--primary-500);
 }
 
 .btn-secondary:hover {
-  background: var(--bg-surface-hover);
-  border-color: var(--border-medium);
+  background: var(--bg-surface-secondary);
+}
+
+.btn-premium {
+  background: var(--primary-900);
+  color: var(--accent-amber);
+  border: 1px solid var(--primary-900);
+}
+
+.btn-premium:hover {
+  background: var(--primary-600);
+  color: var(--accent-light-gold);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--accent-blue);
-  border: 1px solid var(--accent-blue);
+  color: var(--primary-500);
+  border: 1px solid var(--primary-500);
 }
 
 .btn-outline:hover {
-  background: rgba(56, 189, 248, 0.08);
+  background: var(--accent-violet);
 }
 
 .btn-ghost {
@@ -275,8 +260,8 @@ button {
 }
 
 .btn-ghost:hover {
-  color: var(--text-primary);
-  background: var(--bg-surface-hover);
+  color: var(--primary-900);
+  background: var(--bg-surface-secondary);
 }
 
 .btn-sm {
@@ -313,7 +298,7 @@ button {
 .card-interactive:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: var(--primary-500);
 }
 
 /* High-impact Price Typography */
@@ -323,13 +308,13 @@ button {
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.1;
-  color: var(--text-primary);
+  color: var(--primary-900);
 }
 
 .price-unit {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--accent-blue);
+  color: var(--accent-amber); /* Gold accent for 'Crore' */
   margin-left: 0.25rem;
 }
 
@@ -339,7 +324,7 @@ button {
 }
 
 .section-tag {
-  color: var(--accent-blue);
+  color: var(--primary-500);
   font-size: 0.82rem;
   font-weight: 700;
   text-transform: uppercase;

@@ -21,7 +21,7 @@ import {
   ExternalLink,
   ChevronRight
 } from 'lucide-react';
-import { ThreeDViewer } from '../components/3d/ThreeDViewer';
+
 
 export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
   // Quick Estimator State
@@ -139,9 +139,9 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
         <div className="container-xl" style={{ position: 'relative', zIndex: 2 }}>
           {/* Tagline & Live Engine Status Pill */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.75rem' }}>
-            <div className="stitch-pill-live">
-              <span className="pulsing-beacon" style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--status-positive)', display: 'inline-block' }}></span>
-              <span style={{ color: 'var(--status-positive)' }}>PropPulse Neural Engine v4.2 Active</span>
+            <div className="stitch-pill-royal">
+              <span className="pulsing-beacon" style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4169E1', display: 'inline-block' }}></span>
+              <span style={{ color: '#2446A8' }}>PropPulse Neural Engine v4.2 Active</span>
               <span style={{ opacity: 0.4 }}>|</span>
               <span style={{ color: 'var(--text-secondary)', textTransform: 'none', fontWeight: 500 }}>See It. Analyze It. Predict Its Value.</span>
             </div>
@@ -156,12 +156,12 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
           <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 0.9fr)', gap: '2.5rem', alignItems: 'center', marginBottom: '2.5rem' }}>
             <div>
               <h1 className="hero-title" style={{ fontSize: '3.4rem', lineHeight: 1.1, marginBottom: '1rem', letterSpacing: '-0.03em' }}>
-                AI-Powered Property Valuation &amp; <br />
-                <span className="text-gradient">3D Spatial Intelligence</span>
+                Know the Value<br />
+                <span className="text-gradient">Before You Buy.</span>
               </h1>
 
               <p className="hero-desc" style={{ fontSize: '1.12rem', maxWidth: '640px', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-                Upload your property specs, explore photorealistic 3D architectural digital twins, benchmark micro-market ₹/sq.ft transactions, and forecast institutional-grade valuations with gradient boosted ML.
+                AI-powered property price prediction to help you understand the real value of your next property.
               </p>
             </div>
 
@@ -173,7 +173,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                   onClick={() => setCurrentView('predict')}
                 >
                   <Sparkles size={18} />
-                  <span>Analyze My Property</span>
+                  <span>Predict Property Price</span>
                   <ArrowRight size={18} />
                 </button>
 
@@ -181,8 +181,8 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                   className="btn btn-secondary btn-lg"
                   onClick={() => setCurrentView('threed')}
                 >
-                  <Box size={18} color="var(--accent-cyan)" />
-                  <span>Explore 3D Studio</span>
+                  <Building size={18} color="var(--accent-cyan)" />
+                  <span>Explore Properties</span>
                 </button>
               </div>
 
@@ -302,13 +302,13 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              background: 'linear-gradient(180deg, rgba(14, 19, 33, 0.95) 0%, rgba(14, 19, 33, 0) 100%)',
+              background: 'linear-gradient(180deg, var(--bg-surface) 0%, rgba(255,255,255,0) 100%)',
               pointerEvents: 'none'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', pointerEvents: 'auto' }}>
-                <span className="stitch-pill-live">
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-blue)', display: 'inline-block' }}></span>
-                  <span>3D DIGITAL TWIN #PP-8402</span>
+                <span className="stitch-pill-royal">
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4169E1', display: 'inline-block' }}></span>
+                  <span style={{ color: '#2446A8' }}>3D DIGITAL TWIN #PP-8402</span>
                 </span>
                 <span style={{
                   padding: '0.25rem 0.65rem',
@@ -328,7 +328,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.35rem',
-                background: 'rgba(15, 23, 42, 0.75)',
+                background: 'var(--bg-surface-elevated)',
                 backdropFilter: 'blur(12px)',
                 padding: '0.25rem',
                 borderRadius: 'var(--radius-md)',
@@ -358,8 +358,10 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
               </div>
             </div>
 
-            {/* Interactive 3D WebGL Canvas */}
-            <ThreeDViewer height="560px" isHero={true} />
+            {/* 2D Digital Canvas (3D Removed per requirement) */}
+            <div style={{ height: '560px', background: 'var(--bg-surface-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+              <span>2D Property View</span>
+            </div>
 
             {/* Interactive Hotspot Node in 3D Space */}
             <div
@@ -374,7 +376,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
               onClick={() => setHotspotActive(!hotspotActive)}
             >
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span className="pulsing-beacon" style={{ position: 'absolute', width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(56, 189, 248, 0.4)' }}></span>
+                <span className="pulsing-beacon" style={{ position: 'absolute', width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-blue-transparent)' }}></span>
                 <div style={{
                   width: '24px',
                   height: '24px',
@@ -386,7 +388,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                   justifyContent: 'center',
                   fontWeight: 'bold',
                   fontSize: '14px',
-                  boxShadow: '0 0 12px rgba(56, 189, 248, 0.8)'
+                  boxShadow: 'var(--shadow-sm)'
                 }}>
                   +
                 </div>
@@ -400,13 +402,13 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                     width: '240px',
                     padding: '0.75rem 1rem',
                     borderRadius: 'var(--radius-md)',
-                    background: 'rgba(15, 23, 42, 0.95)',
+                    background: 'var(--bg-surface)',
                     backdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(56, 189, 248, 0.4)',
-                    boxShadow: '0 12px 28px rgba(0, 0, 0, 0.5)',
+                    border: '1px solid var(--border-medium)',
+                    boxShadow: 'var(--shadow-md)',
                     zIndex: 40
                   }}>
-                    <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--accent-cyan)', textTransform: 'uppercase' }}>Infinity Deck &amp; Cantilever</div>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--primary-600)', textTransform: 'uppercase' }}>Infinity Deck &amp; Cantilever</div>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>Adds +6.4% micro-valuation premium over standard hillside lots.</div>
                   </div>
                 )}
@@ -424,8 +426,8 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                     fontWeight: 700,
                     padding: '0.15rem 0.5rem',
                     borderRadius: 'var(--radius-full)',
-                    background: 'rgba(16, 185, 129, 0.15)',
-                    color: 'var(--status-positive)',
+                    background: '#F3F6FF',
+                    color: '#3159C9',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '3px'
@@ -434,16 +436,16 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                   </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', margin: '0.25rem 0' }}>
-                  <span style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>₹1.35</span>
-                  <span style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--accent-cyan)' }}>Crore</span>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: 'auto' }}>(₹1,35,00,000)</span>
+                  <span style={{ fontSize: '2rem', fontWeight: 800, color: '#3159C9', letterSpacing: '-0.02em' }}>₹1.35</span>
+                  <span style={{ fontSize: '1.2rem', fontWeight: 700, color: '#3159C9' }}>Crore</span>
+                  <span style={{ fontSize: '0.8rem', color: '#40547D', marginLeft: 'auto' }}>(₹1,35,00,000)</span>
                 </div>
-                <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '2px', overflow: 'hidden', margin: '0.5rem 0' }}>
-                  <div style={{ width: '78%', height: '100%', background: 'linear-gradient(90deg, var(--accent-cyan), var(--primary-500), var(--status-positive))' }}></div>
+                <div style={{ width: '100%', height: '4px', background: '#B8C8FF', borderRadius: '2px', overflow: 'hidden', margin: '0.5rem 0' }}>
+                  <div style={{ width: '78%', height: '100%', background: '#4169E1' }}></div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: '#40547D' }}>
                   <span>Range: ₹1.27 Cr — ₹1.42 Cr</span>
-                  <span style={{ color: 'var(--status-positive)', fontWeight: 600 }}>R² 0.89 High</span>
+                  <span style={{ color: '#3159C9', fontWeight: 600 }}>R² 0.89 High</span>
                 </div>
               </div>
 
@@ -451,27 +453,27 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
               <div className="telemetry-hud-card">
                 <div className="telemetry-hud-header">
                   <span className="telemetry-title">Unit Specifications</span>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>ID: RAJ-JP-0931</span>
+                  <span style={{ fontSize: '0.7rem', color: '#40547D' }}>ID: RAJ-JP-0931</span>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.4rem', margin: '0.25rem 0' }}>
                   <div>
-                    <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block' }}>TYPOLOGY</span>
-                    <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)' }}>3 BHK Cascading</span>
+                    <span style={{ fontSize: '0.68rem', color: '#40547D', display: 'block' }}>TYPOLOGY</span>
+                    <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#3159C9' }}>3 BHK Cascading</span>
                   </div>
                   <div>
-                    <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block' }}>SUPER BUILT-UP</span>
-                    <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)' }}>1,800 sq.ft</span>
+                    <span style={{ fontSize: '0.68rem', color: '#40547D', display: 'block' }}>SUPER BUILT-UP</span>
+                    <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#3159C9' }}>1,800 sq.ft</span>
                   </div>
                   <div>
-                    <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block' }}>BENCHMARK RATE</span>
-                    <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--accent-cyan)' }}>₹7,500 / sq.ft</span>
+                    <span style={{ fontSize: '0.68rem', color: '#40547D', display: 'block' }}>BENCHMARK RATE</span>
+                    <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#3159C9' }}>₹17,500 / sq.ft</span>
                   </div>
                   <div>
-                    <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block' }}>ORIENTATION</span>
-                    <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)' }}>South-West</span>
+                    <span style={{ fontSize: '0.68rem', color: '#40547D', display: 'block' }}>ORIENTATION</span>
+                    <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#3159C9' }}>South-West</span>
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.74rem', color: 'var(--status-positive)', marginTop: '0.25rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.74rem', color: '#4169E1', marginTop: '0.25rem' }}>
                   <CheckCircle2 size={13} />
                   <span>Title Deed Clean • RERA Verified</span>
                 </div>
@@ -481,20 +483,20 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
               <div className="telemetry-hud-card">
                 <div className="telemetry-hud-header">
                   <span className="telemetry-title">Predictive Model Stack</span>
-                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-blue)', display: 'inline-block' }}></span>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4169E1', display: 'inline-block' }}></span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', fontSize: '0.8rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Core Estimator:</span>
-                    <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>XGBoost v3 Regression</span>
+                    <span style={{ color: '#40547D' }}>Core Estimator:</span>
+                    <span style={{ fontWeight: 600, color: '#3159C9' }}>XGBoost v3 Regression</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Neighborhood Comps:</span>
-                    <span style={{ fontWeight: 600, color: 'var(--accent-cyan)' }}>24 Mapped</span>
+                    <span style={{ color: '#40547D' }}>Neighborhood Comps:</span>
+                    <span style={{ fontWeight: 600, color: '#3159C9' }}>24 Mapped</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Registry Ingestion:</span>
-                    <span style={{ color: 'var(--text-muted)' }}>18 Mins Ago</span>
+                    <span style={{ color: '#40547D' }}>Registry Ingestion:</span>
+                    <span style={{ color: '#3159C9' }}>18 Mins Ago</span>
                   </div>
                 </div>
                 <button
@@ -535,8 +537,8 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                   width: '46px',
                   height: '46px',
                   borderRadius: 'var(--radius-md)',
-                  background: 'rgba(79, 70, 229, 0.15)',
-                  color: 'var(--accent-blue)',
+                  background: 'var(--bg-surface-elevated)',
+                  color: 'var(--primary-600)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -563,8 +565,8 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                   width: '46px',
                   height: '46px',
                   borderRadius: 'var(--radius-md)',
-                  background: 'rgba(6, 182, 212, 0.15)',
-                  color: 'var(--accent-cyan)',
+                  background: 'var(--bg-surface-elevated)',
+                  color: 'var(--primary-600)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -591,7 +593,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                   width: '46px',
                   height: '46px',
                   borderRadius: 'var(--radius-md)',
-                  background: 'rgba(16, 185, 129, 0.15)',
+                  background: 'var(--bg-surface-elevated)',
                   color: 'var(--status-positive)',
                   display: 'flex',
                   alignItems: 'center',
@@ -619,8 +621,8 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                   width: '46px',
                   height: '46px',
                   borderRadius: 'var(--radius-md)',
-                  background: 'rgba(139, 92, 246, 0.15)',
-                  color: '#a78bfa',
+                  background: 'var(--bg-surface-elevated)',
+                  color: 'var(--primary-600)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -753,8 +755,8 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
               <h2 style={{ fontSize: '2.4rem', letterSpacing: '-0.02em' }}>Recent Algorithmic Comps Benchmarked</h2>
             </div>
 
-            <div className="stitch-pill-live">
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--status-positive)', display: 'inline-block' }}></span>
+            <div className="stitch-pill-royal">
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4169E1', display: 'inline-block' }}></span>
               <span>Feed Live: 14 New Comps Today</span>
             </div>
           </div>
@@ -792,7 +794,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                       <span style={{
                         padding: '0.2rem 0.6rem',
                         borderRadius: 'var(--radius-full)',
-                        background: 'rgba(16, 185, 129, 0.12)',
+                        background: 'var(--bg-surface-elevated)',
                         color: 'var(--status-positive)',
                         fontSize: '0.74rem',
                         fontWeight: 700
@@ -824,7 +826,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
       <section style={{ padding: '3.5rem 0' }}>
         <div className="container-xl">
           <div style={{
-            background: 'linear-gradient(135deg, var(--bg-surface-elevated) 0%, rgba(30, 41, 59, 0.9) 100%)',
+            background: 'linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%)',
             border: '1px solid var(--border-medium)',
             borderRadius: 'var(--radius-xl)',
             padding: '3rem 2.5rem',
@@ -833,7 +835,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '2rem',
-            boxShadow: '0 24px 48px -12px rgba(0, 0, 0, 0.45)',
+            boxShadow: 'var(--shadow-md)',
             position: 'relative',
             overflow: 'hidden'
           }}>
@@ -842,8 +844,8 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                 display: 'inline-block',
                 padding: '0.25rem 0.75rem',
                 borderRadius: 'var(--radius-full)',
-                background: 'rgba(56, 189, 248, 0.15)',
-                color: 'var(--accent-cyan)',
+                background: 'var(--bg-surface)',
+                color: 'var(--primary-600)',
                 fontSize: '0.75rem',
                 fontWeight: 700,
                 letterSpacing: '0.06em',

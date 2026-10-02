@@ -12,8 +12,7 @@ import {
   Maximize,
   Check
 } from 'lucide-react';
-import { Dropzone } from '../components/property/Dropzone';
-import { Gallery } from '../components/property/Gallery';
+
 import { AIAnalysisLoading } from '../components/property/AIAnalysisLoading';
 import { AIVision } from '../components/property/AIVision';
 import { FeatureImportanceChart } from '../components/charts/FeatureImportanceChart';
@@ -35,7 +34,7 @@ const AMENITY_OPTIONS = [
   "Smart Home"
 ];
 
-export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) => {
+export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = 'admin' }) => {
   // Workflow Phase: 'form' | 'loading' | 'results'
   const [phase, setPhase] = useState('form');
 
@@ -55,9 +54,10 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
     "Swimming Pool", "Garden", "Security", "Smart Home", "CCTV", "Power Backup"
   ]);
 
-  // Media state
-  const [images, setImages] = useState([]);
-  const [primaryIdx, setPrimaryIdx] = useState(0);
+  const [floorPlanFile, setFloorPlanFile] = useState(null);
+
+  const [pricingMethod, setPricingMethod] = useState('AI_ESTIMATE'); // 'AI_ESTIMATE' or 'USER_PROVIDED'
+  const [userPriceSqft, setUserPriceSqft] = useState('');
 
   // Errors state
   const [errors, setErrors] = useState({});
@@ -78,6 +78,9 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
 
   // Generated Prediction Result State
   const [predictionResult, setPredictionResult] = useState(null);
+  
+  // AI Model Selection State
+  const [selectedModel, setSelectedModel] = useState('prop-fast');
 
   // Toggle amenity chips
   const toggleAmenity = (item) => {
@@ -107,6 +110,12 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
     if (!locality.trim()) {
       errs.locality = "Locality is required";
     }
+    
+    if (pricingMethod === 'USER_PROVIDED') {
+      if (!userPriceSqft || parseFloat(userPriceSqft) <= 0) {
+        errs.userPriceSqft = "Please enter a valid price per sq.ft.";
+      }
+    }
 
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -123,7 +132,7 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
 
   const handleLoadingFinished = async () => {
     try {
-      const primaryImg = images[primaryIdx] || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80";
+      const primaryImg = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80";
       const payload = {
         propertyType,
         location,
@@ -138,7 +147,10 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
         balcony: balcony === 'Yes',
         amenities: selectedAmenities,
         primaryImage: primaryImg,
-        images: images.length > 0 ? images : undefined
+        floorPlanUrl: floorPlanFile ? URL.createObjectURL(floorPlanFile) : null,
+        pricingMethod,
+        userPriceSqft: pricingMethod === 'USER_PROVIDED' ? parseFloat(userPriceSqft) : null,
+        aiModel: selectedModel
       };
 
       const res = await propertyService.predictPrice(payload);
@@ -164,8 +176,11 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
     setParking('2');
     setFurnishing('Furnished');
     setBalcony('Yes');
+    setFloorPlanFile(null);
     setSelectedAmenities(["Swimming Pool", "Garden", "Security", "Smart Home"]);
-    setImages([]);
+    setPricingMethod('AI_ESTIMATE');
+    setUserPriceSqft('');
+
     setErrors({});
   };
 
@@ -187,34 +202,79 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
             <span className="section-tag">Machine Learning Valuation</span>
             <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Predict Property Value</h1>
             <p className="section-desc">
-              Upload photos and specify architectural attributes. Our AI regression model analyzes visual features, comps, and locality factors.
+              Specify architectural attributes. Our AI regression model analyzes features, comps, and locality factors to predict property value.
             </p>
           </div>
 
-          <div className="predict-two-column">
-            {/* Left Column: Property Media Dropzone & Gallery */}
-            <div>
-              <div className="card" style={{ padding: '1.75rem', marginBottom: '1.5rem' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Property Media</h3>
-                <Dropzone
-                  images={images}
-                  setImages={setImages}
-                  primaryIdx={primaryIdx}
-                  setPrimaryIdx={setPrimaryIdx}
-                />
-
-                <div style={{ marginTop: '1.5rem' }}>
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.5rem' }}>Preview Gallery</h4>
-                  <Gallery images={images} />
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Property Details Form */}
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            {/* Property Details Form */}
             <div className="form-card">
               <h3 style={{ fontSize: '1.35rem', marginBottom: '1.5rem' }}>Property Details</h3>
 
               <form onSubmit={handlePredictSubmit}>
+                {/* Pricing Method */}
+                <div className="form-group" style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'var(--bg-surface-elevated)', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
+                  <label className="form-label" style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>How would you like to calculate the property price?</label>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                      <input 
+                        type="radio" 
+                        name="pricingMethod" 
+                        value="USER_PROVIDED" 
+                        checked={pricingMethod === 'USER_PROVIDED'}
+                        onChange={() => setPricingMethod('USER_PROVIDED')}
+                        style={{ width: '1.1rem', height: '1.1rem' }}
+                      />
+                      <span style={{ fontWeight: 600 }}>Enter my own price per sq.ft.</span>
+                    </label>
+                    {pricingMethod === 'USER_PROVIDED' && (
+                      <div style={{ marginLeft: '1.8rem', marginTop: '0.5rem' }}>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Enter the approximate price per square foot for this locality.</p>
+                        <div className="form-group" style={{ marginBottom: '0.5rem' }}>
+                          <input
+                            type="number"
+                            className={`form-input ${errors.userPriceSqft ? 'error' : ''}`}
+                            value={userPriceSqft}
+                            onChange={(e) => setUserPriceSqft(e.target.value)}
+                            placeholder="e.g. 5500"
+                            min="1"
+                          />
+                          {errors.userPriceSqft && <span className="form-error-msg">{errors.userPriceSqft}</span>}
+                        </div>
+                        {area && userPriceSqft && !errors.area && parseFloat(userPriceSqft) > 0 && (
+                          <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'white', borderRadius: '6px', border: '1px dashed var(--border-subtle)' }}>
+                            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>Live Calculation</div>
+                            <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--primary-500)' }}>
+                              ₹{((parseFloat(area) * parseFloat(userPriceSqft)) / 100000).toFixed(2)} Lakh
+                            </div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                              {area} sq.ft. × ₹{userPriceSqft} / sq.ft.
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginTop: '0.5rem' }}>
+                      <input 
+                        type="radio" 
+                        name="pricingMethod" 
+                        value="AI_ESTIMATE" 
+                        checked={pricingMethod === 'AI_ESTIMATE'}
+                        onChange={() => setPricingMethod('AI_ESTIMATE')}
+                        style={{ width: '1.1rem', height: '1.1rem' }}
+                      />
+                      <span style={{ fontWeight: 600 }}>Let Propluse estimate it</span>
+                    </label>
+                    {pricingMethod === 'AI_ESTIMATE' && (
+                      <div style={{ marginLeft: '1.8rem' }}>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>Don't know the local price? Let our prediction model estimate the property value based on available property and market factors.</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 {/* Property Type */}
                 <div className="form-group">
                   <label className="form-label">Property Type</label>
@@ -473,6 +533,77 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
                   </div>
                 </div>
 
+                {/* AI Model Selection */}
+                <div className="form-group" style={{ marginTop: '1.5rem', marginBottom: '1.5rem', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
+                  <label className="form-label">Select AI Model</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    {[
+                      {
+                        id: "prop-fast",
+                        name: "PropPulse Fast",
+                        badge: "Free",
+                        desc: "Standard regression model."
+                      },
+                      {
+                        id: "prop-pro",
+                        name: "PropPulse Pro",
+                        badge: "Premium",
+                        desc: "Advanced XGBoost with Vision. Free for Admins."
+                      }
+                    ].map(model => {
+                      const isPremium = model.badge === 'Premium';
+                      const isLocked = isPremium && userRole === 'customer_free';
+                      return (
+                      <div
+                        key={model.id}
+                        onClick={() => {
+                          if (isLocked) {
+                            alert("You need a premium subscription or admin access to use this model.");
+                            return;
+                          }
+                          setSelectedModel(model.id);
+                        }}
+                        style={{
+                          border: `2px solid ${selectedModel === model.id ? 'var(--accent-blue)' : 'var(--border-subtle)'}`,
+                          borderRadius: '8px',
+                          padding: '1rem',
+                          cursor: isLocked ? 'not-allowed' : 'pointer',
+                          background: selectedModel === model.id ? 'var(--bg-surface-hover)' : (isLocked ? 'var(--bg-surface-elevated)' : 'transparent'),
+                          transition: 'all 0.2s ease',
+                          opacity: isLocked ? 0.6 : 1
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                          <span style={{ fontWeight: 600 }}>{model.name} {isLocked && "🔒"}</span>
+                          <span className={model.badge === 'Free' ? 'badge badge-positive' : 'badge badge-ai'} style={{ fontSize: '0.7rem' }}>{model.badge}</span>
+                        </div>
+                        <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>{model.desc}</p>
+                      </div>
+                    )})}
+                  </div>
+                </div>
+
+                {/* 2D Floor Plan Upload */}
+                <div className="form-group" style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
+                  <label className="form-label">Upload 2D Floor Plan (Optional)</label>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Supported: JPG / PNG / WebP / PDF</p>
+                  <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.webp,.pdf"
+                    className="form-input"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        setFloorPlanFile(e.target.files[0]);
+                      }
+                    }}
+                  />
+                  {floorPlanFile && (
+                    <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: 'var(--status-positive)' }}>
+                      Selected: {floorPlanFile.name}
+                    </div>
+                  )}
+                </div>
+
                 {/* Submit and Reset Actions */}
                 <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
                   <button type="submit" className="btn btn-primary btn-lg" style={{ flex: 1 }}>
@@ -517,21 +648,13 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
                 <RotateCcw size={16} />
                 <span>Adjust Parameters</span>
               </button>
-
-              <button
-                className="btn btn-primary"
-                onClick={() => onOpen3D && onOpen3D(predictionResult)}
-              >
-                <Box size={16} />
-                <span>Launch 3D Explorer</span>
-              </button>
             </div>
           </div>
 
           {/* PAGE 9: MAIN PRICE PREDICTION HERO CARD */}
           <div className="result-hero-card">
-            <span className="badge badge-ai" style={{ margin: '0 auto 0.75rem' }}>
-              AI Valuation Estimate &bull; Confidence {predictionResult.aiScore}%
+            <span className={`badge ${predictionResult.pricingMethod === 'USER_PROVIDED' ? 'badge-positive' : 'badge-ai'}`} style={{ margin: '0 auto 0.75rem' }}>
+              {predictionResult.pricingMethod === 'USER_PROVIDED' ? '🟢 User-Provided Rate' : `🔵 Propluse AI Estimate • Confidence ${predictionResult.aiScore}%`}
             </span>
             <div style={{ fontSize: '1.05rem', color: 'var(--text-secondary)' }}>
               Estimated Property Value
@@ -540,23 +663,48 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
             <div className="result-main-price">
               ₹{predictionResult.predictedValue?.toFixed(2)} <span style={{ fontSize: '2rem', color: 'var(--accent-blue)' }}>Lakhs</span>
             </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              AI-generated estimate based on micro-market comps, structural attributes, and visual features.
+            
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+              {predictionResult.pricingMethod === 'USER_PROVIDED' 
+                ? 'Your calculation is based on the price per sq.ft. you entered.'
+                : 'Estimated using property characteristics and the Propluse prediction model.'}
             </p>
 
+            {/* How is this calculated? */}
+            {predictionResult.pricingMethod === 'USER_PROVIDED' && (
+              <div style={{ background: 'var(--bg-card)', padding: '1rem', borderRadius: '8px', textAlign: 'left', marginBottom: '1.5rem', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>How is this calculated?</div>
+                <div style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                  Property Value<br/>
+                  = Property Area × Price per sq.ft.<br/>
+                  = {predictionResult.area} × ₹{predictionResult.userPriceSqft}<br/>
+                  = ₹{(predictionResult.area * predictionResult.userPriceSqft).toLocaleString()}
+                </div>
+              </div>
+            )}
+
             {/* Estimated Price Range Indicator */}
-            <div className="price-range-bar-wrap">
-              <div className="range-labels-row">
-                <span>Lower Bound: ₹{predictionResult.priceRange[0]}L</span>
-                <span>Upper Bound: ₹{predictionResult.priceRange[1]}L</span>
+            {predictionResult.pricingMethod !== 'USER_PROVIDED' && (
+              <div className="price-range-bar-wrap">
+                <div className="range-labels-row">
+                  <span>Lower Bound: ₹{predictionResult.priceRange[0]}L</span>
+                  <span>Upper Bound: ₹{predictionResult.priceRange[1]}L</span>
+                </div>
+                <div className="range-gradient-track">
+                  <div className="range-gradient-fill" />
+                  <div className="range-marker-pin" title={`Median Valuation: ₹${predictionResult.predictedValue}L`} />
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+                  95% Confidence Valuation Band (₹{predictionResult.priceRange[0]}L — ₹{predictionResult.priceRange[1]}L)
+                </div>
               </div>
-              <div className="range-gradient-track">
-                <div className="range-gradient-fill" />
-                <div className="range-marker-pin" title={`Median Valuation: ₹${predictionResult.predictedValue}L`} />
-              </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-                95% Confidence Valuation Band (₹{predictionResult.priceRange[0]}L — ₹{predictionResult.priceRange[1]}L)
-              </div>
+            )}
+            
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '1.5rem', fontStyle: 'italic' }}>
+              {predictionResult.pricingMethod === 'USER_PROVIDED'
+                ? 'This calculation uses the price per sq.ft. entered by you and is not an independent market valuation.'
+                : 'This value is an estimate generated by the Propluse prediction model and should not be treated as a guaranteed selling or purchase price.'
+              }
             </div>
           </div>
 
@@ -626,28 +774,20 @@ export const PredictView = ({ onPredictionComplete, onOpen3D, setCurrentView }) 
           {/* PAGE 5: AI PROPERTY VISION SCAN */}
           <AIVision
             property={predictionResult}
-            defaultImage={images[primaryIdx]}
+            defaultImage={"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"}
             onVerify={() => {}}
           />
 
           {/* PAGE 10: EXPLAINABLE AI (XAI) FEATURE IMPORTANCE CHART */}
           <FeatureImportanceChart />
 
-          {/* Bottom Navigation Links */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
             <button
               className="btn btn-secondary"
-              onClick={() => setCurrentView('floorplan')}
+              onClick={() => setCurrentView('properties')}
             >
               <Layout size={16} />
-              <span>Inspect Floor Plan Blueprint</span>
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => setCurrentView('threed')}
-            >
-              <Box size={16} />
-              <span>Explore Full 3D Model</span>
+              <span>View All Properties</span>
             </button>
           </div>
         </div>

@@ -43,13 +43,13 @@
   width: 38px;
   height: 38px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: var(--primary-600);
+  border: 1px solid var(--border-medium);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--accent-blue);
-  box-shadow: 0 0 16px rgba(99, 102, 241, 0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 .brand-pulse-tag {
@@ -129,7 +129,7 @@
   width: 36px;
   height: 36px;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--primary-500), var(--accent-blue));
+  background: var(--primary-500);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,8 +187,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.35rem 0.85rem;
-  background: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
   border-radius: var(--radius-full);
   font-size: 0.82rem;
   font-weight: 600;
@@ -205,7 +205,7 @@
 }
 
 .hero-title .text-gradient {
-  background: linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%);
+  background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-500) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -230,9 +230,9 @@
   position: relative;
   border-radius: var(--radius-xl);
   overflow: visible;
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.9) 100%);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  box-shadow: var(--shadow-lg);
   aspect-ratio: 4 / 3;
   display: flex;
   align-items: center;
@@ -315,9 +315,9 @@
   width: 52px;
   height: 52px;
   border-radius: var(--radius-lg);
-  background: rgba(99, 102, 241, 0.12);
-  color: var(--accent-blue);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  background: var(--bg-surface-elevated);
+  color: var(--primary-600);
+  border: 1px solid var(--border-medium);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -345,7 +345,7 @@
   font-family: var(--font-display);
   font-size: 2.2rem;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--text-muted), var(--border-medium));
+  background: linear-gradient(135deg, var(--primary-400), var(--primary-700));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.5rem;
@@ -514,18 +514,17 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(8px);
-  color: #FFFFFF;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-medium);
   transition: all var(--transition-fast);
 }
 
 .favorite-btn:hover {
-  background: rgba(244, 63, 94, 0.9);
+  background: var(--status-negative);
   color: #FFFFFF;
 }
 
@@ -1802,6 +1801,22 @@
   text-transform: uppercase;
 }
 
+.stitch-pill-royal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  background: #E8EEFF;
+  backdrop-filter: blur(12px);
+  border: 1px solid #B8C8FF;
+  color: #2446A8;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .quick-estimator-wrap {
   width: 100%;
   background: var(--bg-surface-elevated);
@@ -1903,16 +1918,17 @@
 }
 
 .telemetry-hud-card {
-  background: rgba(15, 23, 42, 0.88);
+  background: linear-gradient(135deg, #F1F4FF 0%, #E1E9FF 100%);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #B8C8FF;
   border-radius: var(--radius-lg);
   padding: 1rem 1.15rem;
-  box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 24px rgba(65, 105, 225, 0.15);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  color: #40547D;
 }
 
 .telemetry-hud-header {
@@ -1927,7 +1943,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--text-muted);
+  color: #2446A8;
 }
 
 /* Bento Pillars */

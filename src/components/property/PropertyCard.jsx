@@ -3,9 +3,7 @@ import { MapPin, Bed, Bath, Maximize, Heart, Box, ArrowUpRight } from 'lucide-re
 
 export const PropertyCard = ({
   property,
-  onSelectProperty,
-  onOpen3D,
-  show3DButton = true
+  onSelectProperty
 }) => {
   const [isFav, setIsFav] = useState(property?.isFavorite || false);
 
@@ -80,19 +78,7 @@ export const PropertyCard = ({
           </div>
 
           <div style={{ display: 'flex', gap: '0.4rem' }}>
-            {show3DButton && onOpen3D && (
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpen3D(property);
-                }}
-                title="Open Interactive 3D Model"
-              >
-                <Box size={14} color="var(--accent-blue)" />
-                <span>3D</span>
-              </button>
-            )}
+
 
             <button
               className="icon-button"

@@ -141,14 +141,25 @@ export const propertyService = {
     const age = Math.max(0, Math.min(100, parseInt(propertyData.age, 10) || 1));
     const parking = Math.max(0, Math.min(50, parseInt(propertyData.parking, 10) || 2));
     const amenitiesBonus = (propertyData.amenities?.length || 4) * 0.45;
-    
-    // Dynamic calculation simulating ML regression
-    const calculatedRate = Math.round(cityBase + (bedrooms * 35) + (bathrooms * 25));
-    const totalValueLakhs = Number(((area * calculatedRate) / 100000 + amenitiesBonus).toFixed(2));
+
+    let calculatedRate;
+    let totalValueLakhs;
+    let pricingMethod = propertyData.pricingMethod || "AI_ESTIMATE";
+
+    if (pricingMethod === "USER_PROVIDED" && propertyData.userPriceSqft) {
+      calculatedRate = parseFloat(propertyData.userPriceSqft);
+      totalValueLakhs = Number(((area * calculatedRate) / 100000).toFixed(2));
+    } else {
+      pricingMethod = "AI_ESTIMATE";
+      // Dynamic calculation simulating ML regression
+      calculatedRate = Math.round(cityBase + (bedrooms * 35) + (bathrooms * 25));
+      totalValueLakhs = Number(((area * calculatedRate) / 100000 + amenitiesBonus).toFixed(2));
+    }
+
     const lowBound = Number((totalValueLakhs * 0.94).toFixed(2));
     const highBound = Number((totalValueLakhs * 1.06).toFixed(2));
-    const localAvgVal = Number((totalValueLakhs * 0.96).toFixed(2));
-    const localAvgRate = Math.round(calculatedRate * 0.96);
+    const localAvgVal = pricingMethod === "AI_ESTIMATE" ? Number((totalValueLakhs * 0.96).toFixed(2)) : Number((((area * cityBase) / 100000) * 0.96).toFixed(2));
+    const localAvgRate = pricingMethod === "AI_ESTIMATE" ? Math.round(calculatedRate * 0.96) : Math.round(cityBase * 0.96);
 
     const newRecord = {
       id: "prop-" + Date.now(),
@@ -170,6 +181,8 @@ export const propertyService = {
       pricePerSqFt: calculatedRate,
       localAvgPricePerSqFt: localAvgRate,
       localAvgValue: localAvgVal,
+      pricingMethod: pricingMethod,
+      userPriceSqft: propertyData.userPriceSqft,
       datePredicted: new Date().toISOString().split('T')[0],
       status: "AI Predicted",
       isFavorite: false,
@@ -277,5 +290,23 @@ export const propertyService = {
    */
   getKPIData: async () => {
     return KPI_DATA;
+  },
+
+  /**
+   * GET /api/properties/:id/price-history
+   * Retrieves historical price data for the property's locality.
+   */
+  getPriceHistory: async (propertyId) => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    
+    // As per requirements: "Do NOT create fake historical data."
+    // The current mock database (mockData.js) does not contain historical 
+    // price records per property or locality over the last 3 years.
+    // Thus, we must return that data is unavailable.
+    return {
+      available: false,
+      years_available: 0,
+      data: []
+    };
   }
 };

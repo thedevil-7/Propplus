@@ -25,8 +25,8 @@ export const DashboardView = ({
   kpiData,
   properties = [],
   onSelectProperty,
-  onOpen3D,
-  setCurrentView
+  setCurrentView,
+  userRole = 'admin'
 }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const recentProps = properties.slice(0, 4);
@@ -38,6 +38,89 @@ export const DashboardView = ({
     { period: 'Jul', rate: 3960 },
     { period: 'Sep', rate: 4028 }
   ];
+
+  const isAdmin = userRole === 'admin';
+  const isPremium = userRole === 'customer_premium';
+
+  if (!isAdmin) {
+    return (
+      <div className="container-xl" style={{ paddingBottom: '4rem' }}>
+        <h2 style={{ fontSize: '2.5rem', marginBottom: '2rem' }}>Customer Dashboard</h2>
+        
+        <div className="kpi-grid">
+          <div className="kpi-card">
+            <div className="kpi-top">
+              <span className="kpi-label">Current Plan</span>
+              <div className="kpi-icon-box">
+                <ShieldCheck size={18} color={isPremium ? "var(--accent-blue)" : "var(--text-muted)"} />
+              </div>
+            </div>
+            <div className="kpi-value" style={{ color: isPremium ? 'var(--accent-blue)' : 'var(--text-primary)', fontSize: '1.5rem' }}>
+              {isPremium ? 'Premium (Pro)' : 'Free Tier'}
+            </div>
+            {isPremium ? (
+              <div className="kpi-trend" style={{ color: 'var(--status-positive)' }}>
+                <CheckCircle2 size={14} />
+                <span>Active</span>
+              </div>
+            ) : (
+              <div className="kpi-trend" style={{ color: 'var(--accent-blue)', cursor: 'pointer' }}>
+                <ArrowUpRight size={14} />
+                <span>Upgrade to Premium</span>
+              </div>
+            )}
+          </div>
+          
+          <div className="kpi-card">
+            <div className="kpi-top">
+              <span className="kpi-label">API Usage</span>
+              <div className="kpi-icon-box">
+                <Activity size={18} />
+              </div>
+            </div>
+            <div className="kpi-value" style={{ fontSize: '1.5rem' }}>
+              {isPremium ? '14 Predictions' : '3 / 10 Predictions'}
+            </div>
+            <div className="kpi-trend" style={{ color: 'var(--text-muted)' }}>
+              <span>{isPremium ? 'Unlimited access' : '7 remaining this month'}</span>
+            </div>
+          </div>
+          
+          <div className="kpi-card">
+            <div className="kpi-top">
+              <span className="kpi-label">AI Models Available</span>
+              <div className="kpi-icon-box">
+                <Sparkles size={18} />
+              </div>
+            </div>
+            <div className="kpi-value" style={{ fontSize: '1.5rem' }}>
+              {isPremium ? 'Fast + Pro Vision' : 'Fast Only'}
+            </div>
+            <div className="kpi-trend" style={{ color: 'var(--status-positive)' }}>
+              <CheckCircle2 size={14} />
+              <span>{isPremium ? 'All features unlocked' : 'Standard regression'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ marginTop: '2.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+            <h3 style={{ fontSize: '1.35rem' }}>Your Recent Predictions</h3>
+            <button className="btn btn-secondary btn-sm" onClick={() => setCurrentView('history')}>View All</button>
+          </div>
+          <div className="property-grid-2col">
+            {recentProps.map((prop) => (
+              <PropertyCard
+                key={prop.id}
+                property={prop}
+                onSelectProperty={onSelectProperty}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container-xl" style={{ paddingBottom: '4rem' }}>
@@ -65,7 +148,7 @@ export const DashboardView = ({
           >
             <Sparkles size={14} />
             <span>Unified Overview</span>
-            <span style={{ fontSize: '0.65rem', padding: '0.1rem 0.4rem', borderRadius: 'var(--radius-full)', background: 'rgba(255,255,255,0.2)', marginLeft: '4px' }}>LIVE</span>
+            <span style={{ fontSize: '0.65rem', padding: '0.1rem 0.4rem', borderRadius: 'var(--radius-full)', background: 'var(--bg-surface)', marginLeft: '4px' }}>LIVE</span>
           </button>
 
           <button
@@ -123,11 +206,11 @@ export const DashboardView = ({
           2. HERO PROPERTY SPOTLIGHT CARD (STITCH INSPIRATION)
           ------------------------------------------------------------------ */}
       <div style={{
-        background: 'linear-gradient(135deg, var(--bg-surface-elevated) 0%, rgba(26, 31, 46, 0.9) 100%)',
+        background: 'linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%)',
         border: '1px solid var(--border-medium)',
         borderRadius: 'var(--radius-xl)',
         padding: '1.75rem',
-        boxShadow: '0 20px 40px -12px rgba(0, 0, 0, 0.4)',
+        boxShadow: 'var(--shadow-md)',
         marginBottom: '2rem',
         position: 'relative',
         overflow: 'hidden'
@@ -138,7 +221,7 @@ export const DashboardView = ({
               <span style={{
                 padding: '0.2rem 0.65rem',
                 borderRadius: 'var(--radius-full)',
-                background: 'rgba(16, 185, 129, 0.15)',
+                background: 'var(--bg-surface)',
                 color: 'var(--status-positive)',
                 fontSize: '0.72rem',
                 fontWeight: 700,
@@ -170,7 +253,7 @@ export const DashboardView = ({
                 gap: '3px',
                 padding: '0.25rem 0.65rem',
                 borderRadius: 'var(--radius-full)',
-                background: 'rgba(16, 185, 129, 0.15)',
+                background: 'var(--bg-surface)',
                 color: 'var(--status-positive)',
                 fontSize: '0.75rem',
                 fontWeight: 700
@@ -187,7 +270,7 @@ export const DashboardView = ({
                 <span style={{ color: 'var(--accent-cyan)' }}>Predicted: ₹1.35 Cr</span>
                 <span>P90: ₹1.42 Cr</span>
               </div>
-              <div style={{ position: 'relative', width: '100%', height: '8px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{ position: 'relative', width: '100%', height: '8px', background: 'var(--bg-surface)', borderRadius: '4px', overflow: 'hidden' }}>
                 <div style={{
                   position: 'absolute',
                   left: '15%',
@@ -345,7 +428,7 @@ export const DashboardView = ({
                 key={prop.id}
                 property={prop}
                 onSelectProperty={onSelectProperty}
-                onOpen3D={onOpen3D}
+
               />
             ))}
           </div>

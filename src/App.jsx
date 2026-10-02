@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import { Toast } from './components/common/Toast';
@@ -7,8 +7,7 @@ import { Modal } from './components/common/Modal';
 import { LandingView } from './views/LandingView';
 import { DashboardView } from './views/DashboardView';
 import { PredictView } from './views/PredictView';
-import { ThreeDView } from './views/ThreeDView';
-import { Studio3DPlanView } from './views/Studio3DPlanView';
+
 import { ComparisonView } from './views/ComparisonView';
 import { SimilarView } from './views/SimilarView';
 import { MarketInsightsView } from './views/MarketInsightsView';
@@ -28,14 +27,15 @@ export function App() {
   const [currentView, setCurrentView] = useState('landing');
   const [selectedProperty, setSelectedProperty] = useState(DEMO_PROPERTIES[0]);
 
+  // Auth/Role State
+  const [userRole, setUserRole] = useState('admin');
+
   // Modals
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  // Theme Management (Light / Dark mode persisted)
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('proppulse_theme') || 'dark';
-  });
+  // Theme Management (Forced to Light Theme per redesign)
+  const [theme, setTheme] = useState('light');
 
   // Settings & Toggles
   const [showDemoLabels, setShowDemoLabels] = useState(true);
@@ -96,7 +96,7 @@ export function App() {
 
   // Scroll spy with IntersectionObserver to update active navbar item as user scrolls
   useEffect(() => {
-    const sections = ['landing', 'predict', 'floorplan', 'dashboard', 'threed', 'insights', 'properties', 'history'];
+    const sections = ['landing', 'predict', 'dashboard', 'insights', 'properties', 'history'];
     const observerOptions = {
       root: null,
       rootMargin: '-20% 0px -60% 0px',
@@ -125,10 +125,7 @@ export function App() {
   }, []);
 
   // Handlers
-  const handleOpen3D = (prop) => {
-    setSelectedProperty(prop);
-    scrollToSection('floorplan');
-  };
+
 
   const handleSelectProperty = (prop) => {
     setSelectedProperty(prop);
@@ -140,7 +137,7 @@ export function App() {
     setSelectedProperty(newProp);
     showToast(`AI Valuation Complete: ₹${newProp.predictedValue} Lakhs`, 'success');
     setTimeout(() => {
-      scrollToSection('floorplan');
+      scrollToSection('properties');
     }, 450);
   };
 
@@ -166,6 +163,8 @@ export function App() {
         theme={theme}
         setTheme={setTheme}
         onOpenSearch={() => setIsSearchOpen(true)}
+        userRole={userRole}
+        setUserRole={setUserRole}
       />
 
       {/* Main Single Page Scrollable Canvas */}
@@ -207,46 +206,15 @@ export function App() {
 
             <PredictView
               onPredictionComplete={handlePredictionComplete}
-              onOpen3D={handleOpen3D}
               setCurrentView={scrollToSection}
+              userRole={userRole}
             />
           </div>
         </section>
 
         <div className="section-divider-line" />
 
-        {/* =================================================================
-            SECTION 3: 3D & 2D SPATIAL STUDIO (#floorplan)
-            ================================================================= */}
-        <section id="floorplan" className="page-scroll-section">
-          <div className="container-xl">
-            <div className="section-header-banner">
-              <div>
-                <span className="section-tag" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                  <Layout size={13} color="var(--accent-blue)" /> 03 &bull; ARCHITECTURAL DIGITAL TWIN
-                </span>
-                <h2 style={{ fontSize: '2.5rem', letterSpacing: '-0.02em', marginTop: '0.35rem' }}>
-                  3D Interior &amp; Furnished Floor Plan Studio
-                </h2>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', maxWidth: '650px', marginTop: '0.25rem' }}>
-                  Explore 3D cutaway models, interactive 2D CAD blueprints, color-coded functional zoning, and real-time laser dimension measurement.
-                </p>
-              </div>
 
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <span className="badge badge-demo">2D &amp; 3D SYNCHRONIZED</span>
-              </div>
-            </div>
-
-            <Studio3DPlanView
-              property={selectedProperty}
-              setCurrentView={scrollToSection}
-              onShowToast={showToast}
-            />
-          </div>
-        </section>
-
-        <div className="section-divider-line" />
 
         {/* =================================================================
             SECTION 4: EXECUTIVE ANALYTICS DASHBOARD (#dashboard)
@@ -271,41 +239,15 @@ export function App() {
               kpiData={kpiData}
               properties={propertiesList}
               onSelectProperty={handleSelectProperty}
-              onOpen3D={handleOpen3D}
               setCurrentView={scrollToSection}
+              userRole={userRole}
             />
           </div>
         </section>
 
         <div className="section-divider-line" />
 
-        {/* =================================================================
-            SECTION 5: 3D HOUSE GEOMETRY EXPLORER (#threed)
-            ================================================================= */}
-        <section id="threed" className="page-scroll-section">
-          <div className="container-xl">
-            <div className="section-header-banner">
-              <div>
-                <span className="section-tag" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                  <Box size={13} color="var(--accent-blue)" /> 05 &bull; SPATIAL COMPUTING
-                </span>
-                <h2 style={{ fontSize: '2.5rem', letterSpacing: '-0.02em', marginTop: '0.35rem' }}>
-                  Interactive 3D Architectural Explorer
-                </h2>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', maxWidth: '650px', marginTop: '0.25rem' }}>
-                  Procedural Three.js WebGL rendering with live exterior stucco palette, roof geometry variants, landscaping, and camera presets.
-                </p>
-              </div>
-            </div>
 
-            <ThreeDView
-              property={selectedProperty}
-              setCurrentView={scrollToSection}
-            />
-          </div>
-        </section>
-
-        <div className="section-divider-line" />
 
         {/* =================================================================
             SECTION 6: MARKET INSIGHTS & REGIONAL BENCHMARKS (#insights)
@@ -353,12 +295,10 @@ export function App() {
 
             <SimilarView
               onSelectProperty={handleSelectProperty}
-              onOpen3D={handleOpen3D}
             />
 
             <div style={{ marginTop: '3rem' }}>
               <ComparisonView
-                onOpen3D={handleOpen3D}
                 onSelectProperty={handleSelectProperty}
               />
             </div>

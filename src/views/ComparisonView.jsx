@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { DEMO_PROPERTIES } from '../api/mockData';
 import { Box, Sparkles, Check, ArrowRight } from 'lucide-react';
 
-export const ComparisonView = ({ onOpen3D, onSelectProperty }) => {
+export const ComparisonView = ({ onSelectProperty }) => {
   const [selectedProps, setSelectedProps] = useState(DEMO_PROPERTIES.slice(0, 3));
 
   const features = [
@@ -46,14 +46,7 @@ export const ComparisonView = ({ onOpen3D, onSelectProperty }) => {
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => onOpen3D && onOpen3D(p)}
-                title="Open 3D Model"
-              >
-                <Box size={14} color="var(--accent-blue)" />
-                <span>3D View</span>
-              </button>
+
               <button
                 className="btn btn-ghost btn-sm"
                 onClick={() => onSelectProperty && onSelectProperty(p)}
