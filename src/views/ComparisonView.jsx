@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { DEMO_PROPERTIES } from '../api/mockData';
 import { Box, Sparkles, Check, ArrowRight } from 'lucide-react';
 
-export const ComparisonView = ({ onSelectProperty }) => {
-  const [selectedProps, setSelectedProps] = useState(DEMO_PROPERTIES.slice(0, 3));
+export const ComparisonView = ({ onSelectProperty, userRole }) => {
+  const isFree = userRole === 'customer_free' || userRole === 'guest';
+  const limit = isFree ? 2 : 5;
+  const [selectedProps, setSelectedProps] = useState(DEMO_PROPERTIES.slice(0, limit));
 
   const features = [
     { label: "Predicted Price", key: "predictedValue", format: (v) => `₹${v}L` },
@@ -28,7 +30,7 @@ export const ComparisonView = ({ onSelectProperty }) => {
         </p>
       </div>
 
-      {/* Property Cards Preview Row with 3D button */}
+      {/* Property Cards Preview Row */}
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${selectedProps.length}, 1fr)`, gap: '1.5rem', marginBottom: '1.5rem' }}>
         {selectedProps.map((p, idx) => (
           <div key={p.id} className="card" style={{ padding: '1rem', textAlign: 'center' }}>
@@ -57,6 +59,13 @@ export const ComparisonView = ({ onSelectProperty }) => {
           </div>
         ))}
       </div>
+
+      {isFree && (
+         <div className="card" style={{ padding: '2rem', textAlign: 'center', marginBottom: '2rem', background: 'rgba(255, 255, 255, 0.95)', border: '1px dashed var(--border-medium)' }}>
+            <h3 style={{ marginBottom: '0.5rem', color: 'var(--accent-blue)' }}>🔒 Compare up to 5 properties</h3>
+            <p style={{ color: 'var(--text-secondary)' }}>You are currently viewing 2 properties. Upgrade to Premium to compare 5 or more properties.</p>
+         </div>
+      )}
 
       {/* Comparison Matrix Table */}
       <div className="comparison-table-wrapper">

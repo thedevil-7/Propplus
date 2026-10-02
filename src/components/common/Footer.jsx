@@ -14,7 +14,7 @@ export const Footer = ({ setCurrentView }) => {
             <span>Prop<span className="brand-pulse-tag">Pulse</span></span>
           </div>
           <p style={{ fontSize: '0.85rem', maxWidth: '380px' }}>
-            See It. Analyze It. Predict Its Value. Next-generation AI-powered real-estate valuation & 3D intelligence platform.
+            See It. Analyze It. Predict Its Value. Next-generation AI-powered real-estate valuation & intelligence platform.
           </p>
         </div>
 
@@ -24,7 +24,7 @@ export const Footer = ({ setCurrentView }) => {
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.88rem' }}>
               <li><button className="btn-ghost" onClick={() => setCurrentView('dashboard')}>Dashboard</button></li>
               <li><button className="btn-ghost" onClick={() => setCurrentView('predict')}>Valuation Model</button></li>
-              <li><button className="btn-ghost" onClick={() => setCurrentView('threed')}>3D House Explorer</button></li>
+              <li><button className="btn-ghost" onClick={() => setCurrentView('floorplan')}>2D Floor Plans</button></li>
               <li><button className="btn-ghost" onClick={() => setCurrentView('insights')}>Market Intelligence</button></li>
             </ul>
           </div>

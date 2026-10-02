@@ -1,0 +1,64 @@
+{
+  "properties": [],
+  "history": [],
+  "kpiData": {
+    "totalValuations": 14320,
+    "avgAccuracy": 94.2,
+    "activeModels": 3,
+    "systemStatus": "Optimal"
+  },
+  "marketInsights": {
+    "trend": [
+      {
+        "year": "2021",
+        "price": 46
+      },
+      {
+        "year": "2022",
+        "price": 51
+      },
+      {
+        "year": "2023",
+        "price": 56
+      },
+      {
+        "year": "2024",
+        "price": 61
+      },
+      {
+        "year": "2025",
+        "price": 66
+      },
+      {
+        "year": "2026 (Now)",
+        "price": 71.2
+      }
+    ],
+    "regionalGrowth": [
+      {
+        "period": "Q1 2024",
+        "rate": 3100
+      },
+      {
+        "period": "Q2 2024",
+        "rate": 3220
+      },
+      {
+        "period": "Q3 2024",
+        "rate": 3340
+      },
+      {
+        "period": "Q4 2024",
+        "rate": 3410
+      },
+      {
+        "period": "Q1 2025",
+        "rate": 3480
+      },
+      {
+        "period": "Q2 2026",
+        "rate": 3540
+      }
+    ]
+  }
+}

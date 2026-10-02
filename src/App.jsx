@@ -14,6 +14,7 @@ import { MarketInsightsView } from './views/MarketInsightsView';
 import { HistoryView } from './views/HistoryView';
 import { PropertyDetailView } from './views/PropertyDetailView';
 import { SettingsView } from './views/SettingsView';
+import { PricingView } from './views/PricingView';
 
 import { propertyService } from './api/propertyService';
 import { DEMO_PROPERTIES, KPI_DATA } from './api/mockData';
@@ -33,6 +34,9 @@ export function App() {
   // Modals
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // SaaS Credits State
+  const [credits, setCredits] = useState(3);
 
   // Theme Management (Forced to Light Theme per redesign)
   const [theme, setTheme] = useState('light');
@@ -96,7 +100,7 @@ export function App() {
 
   // Scroll spy with IntersectionObserver to update active navbar item as user scrolls
   useEffect(() => {
-    const sections = ['landing', 'predict', 'dashboard', 'insights', 'properties', 'history'];
+    const sections = ['landing', 'predict', 'dashboard', 'insights', 'properties', 'pricing', 'history'];
     const observerOptions = {
       root: null,
       rootMargin: '-20% 0px -60% 0px',
@@ -135,6 +139,9 @@ export function App() {
   const handlePredictionComplete = (newProp) => {
     setPropertiesList((prev) => [newProp, ...prev]);
     setSelectedProperty(newProp);
+    if (userRole !== 'customer_premium') {
+      setCredits(prev => Math.max(0, prev - 1));
+    }
     showToast(`AI Valuation Complete: ₹${newProp.predictedValue} Lakhs`, 'success');
     setTimeout(() => {
       scrollToSection('properties');
@@ -208,6 +215,7 @@ export function App() {
               onPredictionComplete={handlePredictionComplete}
               setCurrentView={scrollToSection}
               userRole={userRole}
+              credits={credits}
             />
           </div>
         </section>
@@ -241,6 +249,7 @@ export function App() {
               onSelectProperty={handleSelectProperty}
               setCurrentView={scrollToSection}
               userRole={userRole}
+              credits={credits}
             />
           </div>
         </section>
@@ -300,6 +309,7 @@ export function App() {
             <div style={{ marginTop: '3rem' }}>
               <ComparisonView
                 onSelectProperty={handleSelectProperty}
+                userRole={userRole}
               />
             </div>
           </div>
@@ -333,6 +343,19 @@ export function App() {
               setCurrentView={scrollToSection}
             />
           </div>
+        </section>
+
+        <div className="section-divider-line" />
+
+        {/* =================================================================
+            SECTION 9: PRICING & PLANS (#pricing)
+            ================================================================= */}
+        <section id="pricing" className="page-scroll-section">
+          <PricingView 
+            userRole={userRole} 
+            setUserRole={setUserRole} 
+            setCurrentView={scrollToSection} 
+          />
         </section>
       </main>
 
@@ -436,8 +459,38 @@ export function App() {
           showAIExplanations={showAIExplanations}
           setShowAIExplanations={setShowAIExplanations}
           onShowToast={showToast}
+          userRole={userRole}
         />
       </Modal>
+
+      {/* FOOTER: Trust & Transparency */}
+      <footer style={{ background: 'var(--bg-surface-elevated)', borderTop: '1px solid var(--border-subtle)', padding: '4rem 2rem', marginTop: '4rem' }}>
+        <div className="container-xl" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem' }}>
+          <div>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--accent-blue)' }}>HOW PROPULSE ESTIMATES PROPERTY VALUE</h3>
+            <ol style={{ paddingLeft: '1.25rem', color: 'var(--text-secondary)', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', margin: 0 }}>
+              <li>Property information & specifications</li>
+              <li>Micro-locality geospatial data</li>
+              <li>Analysis of comparable properties</li>
+              <li>Price per sq.ft. adjustments</li>
+              <li>Historical market trends</li>
+              <li>Advanced AI model analysis</li>
+              <li>Final estimated valuation range</li>
+            </ol>
+          </div>
+          <div>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Important Disclaimer</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.6 }}>
+              PropPulse provides an estimated property value based on available data and predictive model outputs. 
+              It is not a guaranteed sale price, a formal appraisal, or financial advice. The final transaction 
+              value depends on market conditions, negotiation, and physical property inspection.
+            </p>
+            <div style={{ marginTop: '2rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+              © {new Date().getFullYear()} PropPulse Neural Engine V4.2
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

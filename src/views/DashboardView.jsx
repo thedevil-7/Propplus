@@ -26,7 +26,8 @@ export const DashboardView = ({
   properties = [],
   onSelectProperty,
   setCurrentView,
-  userRole = 'admin'
+  userRole = 'admin',
+  credits = 3
 }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const recentProps = properties.slice(0, 4);
@@ -64,7 +65,7 @@ export const DashboardView = ({
                 <span>Active</span>
               </div>
             ) : (
-              <div className="kpi-trend" style={{ color: 'var(--accent-blue)', cursor: 'pointer' }}>
+              <div className="kpi-trend" style={{ color: 'var(--accent-blue)', cursor: 'pointer' }} onClick={() => setCurrentView('pricing')}>
                 <ArrowUpRight size={14} />
                 <span>Upgrade to Premium</span>
               </div>
@@ -79,10 +80,10 @@ export const DashboardView = ({
               </div>
             </div>
             <div className="kpi-value" style={{ fontSize: '1.5rem' }}>
-              {isPremium ? '14 Predictions' : '3 / 10 Predictions'}
+              {isPremium ? '14 Predictions' : `${credits} / 10 Predictions`}
             </div>
             <div className="kpi-trend" style={{ color: 'var(--text-muted)' }}>
-              <span>{isPremium ? 'Unlimited access' : '7 remaining this month'}</span>
+              <span>{isPremium ? 'Unlimited access' : `${credits} remaining this month`}</span>
             </div>
           </div>
           
@@ -157,7 +158,7 @@ export const DashboardView = ({
             onClick={() => setCurrentView('predict')}
           >
             <span>AI Valuation &amp; Explainability</span>
-            <span style={{ fontSize: '0.68rem', color: 'var(--accent-cyan)', fontWeight: 700, marginLeft: '4px' }}>₹1.35 Cr</span>
+            <span style={{ fontSize: '0.68rem', color: 'var(--accent-blue)', fontWeight: 700, marginLeft: '4px' }}>₹1.35 Cr</span>
           </button>
 
           <button
@@ -165,9 +166,9 @@ export const DashboardView = ({
             style={{ borderRadius: 'var(--radius-full)', padding: '0.4rem 0.95rem' }}
             onClick={() => setCurrentView('floorplan')}
           >
-            <Box size={14} color="var(--accent-blue)" />
-            <span>3D Digital Twin &amp; Floor Plans</span>
-            <span style={{ fontSize: '0.68rem', color: 'var(--accent-blue)', fontWeight: 700, marginLeft: '4px' }}>CAD</span>
+            <Layers size={14} color="var(--accent-blue)" />
+            <span>2D Floor Plans</span>
+            <span style={{ fontSize: '0.68rem', color: 'var(--accent-blue)', fontWeight: 700, marginLeft: '4px' }}>2D</span>
           </button>
 
           <button
@@ -206,7 +207,7 @@ export const DashboardView = ({
           2. HERO PROPERTY SPOTLIGHT CARD (STITCH INSPIRATION)
           ------------------------------------------------------------------ */}
       <div style={{
-        background: 'linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%)',
+        background: 'linear-gradient(135deg, var(--border-subtle) 0%, var(--bg-surface-secondary) 100%)',
         border: '1px solid var(--border-medium)',
         borderRadius: 'var(--radius-xl)',
         padding: '1.75rem',
@@ -229,7 +230,7 @@ export const DashboardView = ({
               }}>
                 MODEL V4.2 RELIABLE
               </span>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--accent-cyan)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--accent-blue)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 PENTHOUSE SUITE SPOTLIGHT
               </span>
             </div>
@@ -245,7 +246,7 @@ export const DashboardView = ({
             {/* Price Row */}
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', marginBottom: '0.5rem' }}>
               <span style={{ fontSize: '2.6rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-                ₹1.35 <span style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--accent-cyan)' }}>Crore</span>
+                ₹1.35 <span style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--accent-blue)' }}>Crore</span>
               </span>
               <span style={{
                 display: 'inline-flex',
@@ -267,7 +268,7 @@ export const DashboardView = ({
             <div style={{ marginTop: '1.25rem', padding: '1rem', background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.4rem', fontWeight: 600 }}>
                 <span>90% CI • P10: ₹1.27 Cr</span>
-                <span style={{ color: 'var(--accent-cyan)' }}>Predicted: ₹1.35 Cr</span>
+                <span style={{ color: 'var(--accent-blue)' }}>Predicted: ₹1.35 Cr</span>
                 <span>P90: ₹1.42 Cr</span>
               </div>
               <div style={{ position: 'relative', width: '100%', height: '8px', background: 'var(--bg-surface)', borderRadius: '4px', overflow: 'hidden' }}>
@@ -276,7 +277,7 @@ export const DashboardView = ({
                   left: '15%',
                   right: '12%',
                   height: '100%',
-                  background: 'linear-gradient(90deg, var(--accent-blue), var(--accent-cyan), var(--status-positive))',
+                  background: 'linear-gradient(90deg, var(--accent-blue), var(--primary-600), var(--status-positive))',
                   borderRadius: '4px'
                 }}></div>
               </div>
@@ -302,8 +303,8 @@ export const DashboardView = ({
                 onClick={() => setCurrentView('floorplan')}
                 style={{ padding: '0.65rem 1.25rem' }}
               >
-                <Box size={15} color="var(--accent-blue)" />
-                <span>Inspect 3D Digital Twin</span>
+                <Layers size={15} color="var(--accent-blue)" />
+                <span>View 2D Floor Plan</span>
               </button>
             </div>
           </div>
@@ -330,7 +331,7 @@ export const DashboardView = ({
 
             <div style={{ padding: '1rem', background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
               <span style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Regression R²</span>
-              <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent-cyan)', marginTop: '0.2rem' }}>0.912</div>
+              <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent-blue)', marginTop: '0.2rem' }}>0.912</div>
               <span style={{ fontSize: '0.74rem', color: 'var(--status-positive)', fontWeight: 600 }}>Conf: 94% High</span>
             </div>
           </div>
@@ -360,7 +361,7 @@ export const DashboardView = ({
         <div className="kpi-card">
           <div className="kpi-top">
             <span className="kpi-label">Average Estimated Value</span>
-            <div className="kpi-icon-box" style={{ color: 'var(--accent-cyan)' }}>
+            <div className="kpi-icon-box" style={{ color: 'var(--accent-blue)' }}>
               <Sparkles size={18} />
             </div>
           </div>

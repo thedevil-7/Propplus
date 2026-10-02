@@ -74,8 +74,6 @@ export const SimilarView = ({ onSelectProperty }) => {
             key={prop.id}
             property={prop}
             onSelectProperty={onSelectProperty}
-
-            show3DButton={true}
           />
         ))}
       </div>

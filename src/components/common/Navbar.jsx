@@ -36,6 +36,7 @@ export const Navbar = ({
     { id: 'dashboard', label: 'Dashboard', icon: Compass },
     { id: 'insights', label: 'Market Insights', icon: TrendingUp },
     { id: 'properties', label: 'Properties', icon: Building2 },
+    { id: 'pricing', label: 'Pricing', icon: Box },
     { id: 'history', label: 'History', icon: History }
   ];
 

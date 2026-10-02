@@ -15,10 +15,6 @@ export const TourView = ({ setCurrentView }) => {
         </div>
 
         <div style={{ display: 'flex', gap: '0.75rem' }}>
-          <button className="btn btn-secondary" onClick={() => setCurrentView('threed')}>
-            <Box size={16} />
-            <span>Switch to Exterior 3D</span>
-          </button>
           <button className="btn btn-secondary" onClick={() => setCurrentView('floorplan')}>
             <Layout size={16} />
             <span>Blueprint Layout</span>

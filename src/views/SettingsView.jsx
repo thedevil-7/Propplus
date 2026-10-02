@@ -9,7 +9,8 @@ export const SettingsView = ({
   setShowDemoLabels,
   showAIExplanations,
   setShowAIExplanations,
-  onShowToast
+  onShowToast,
+  userRole
 }) => {
   const [userName, setUserName] = useState("Alex Morgan");
   const [userEmail, setUserEmail] = useState("alex.morgan@proppulse.ai");
@@ -237,6 +238,33 @@ export const SettingsView = ({
           />
         </label>
       </div>
+
+      {/* 5. Admin Controls (Only visible to admin) */}
+      {userRole === 'admin' && (
+        <div className="settings-section" style={{ border: '1px solid var(--accent-gold)', background: 'var(--bg-surface-secondary)' }}>
+          <h3 className="settings-section-title" style={{ color: 'var(--accent-gold)' }}>
+            <Sliders size={20} color="var(--accent-gold)" /> Admin Configuration Control
+          </h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+            Modify global subscription limits and pricing models. Changes apply globally without requiring code deploys.
+          </p>
+
+          <div className="form-grid-2col">
+            <div className="form-group">
+              <label className="form-label">Free Plan Prediction Limit</label>
+              <input type="number" className="form-input" defaultValue={10} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Premium Plan Price (INR)</label>
+              <input type="number" className="form-input" defaultValue={999} />
+            </div>
+          </div>
+          
+          <button type="button" className="btn btn-primary btn-sm" onClick={() => onShowToast && onShowToast("Admin configurations updated successfully.", "success")}>
+            Save Admin Settings
+          </button>
+        </div>
+      )}
     </div>
   );
 };

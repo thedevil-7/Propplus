@@ -11,35 +11,35 @@
   --bg-app: #F7F8FC;
   --bg-surface: #FFFFFF;
   --bg-surface-elevated: #FCFCFF;
-  --bg-surface-secondary: #EEF1F7;
+  --bg-surface-secondary: #F3F6FF; /* Very Light Blue */
   --bg-glass: rgba(255, 255, 255, 0.9);
   --bg-glass-subtle: rgba(255, 255, 255, 0.4);
 
-  --border-subtle: #DCE1EB;
-  --border-medium: #B9C5DD;
-  --border-focus: #6B82D8;
+  --border-subtle: #E8EEFF; /* Light Royal Blue */
+  --border-medium: #B8C8FF; /* Border */
+  --border-focus: #4169E1;
 
-  --text-primary: #172033;
-  --text-secondary: #5D6678;
+  --text-primary: #18233F; /* Primary Text */
+  --text-secondary: #53627D; /* Secondary Text */
   --text-muted: #8992A3;
-  --text-inverse: #FFFFFF;
+  --text-inverse: #FFFFFF; /* White */
 
   /* Brand Accents */
-  --primary-500: #3157C7; /* Royal Blue */
-  --primary-600: #243B7A; /* Deep Royal Blue */
-  --primary-900: #18264A; /* Royal Navy */
-  --primary-glow: rgba(49, 87, 199, 0.15);
+  --primary-500: #4169E1; /* Primary */
+  --primary-600: #2446A8; /* Deep Royal Blue */
+  --primary-900: #18233F; /* Same as primary text for dark emphasis */
+  --primary-glow: rgba(65, 105, 225, 0.15);
 
-  --accent-cyan: #3157C7; /* Mapped to Royal Blue for legacy comp */
-  --accent-blue: #4B6FE8; /* Bright Royal Accent */
-  --accent-violet: #E8EDFF; /* Soft Royal Blue */
+  --accent-cyan: #4169E1; /* Mapped to Royal Blue */
+  --accent-blue: #4169E1; /* Primary */
+  --accent-violet: #E8EEFF; /* Light Royal Blue */
   
   --accent-amber: #C9A227; /* Warm Gold */
-  --accent-emerald: #2F8F72;
+  --accent-emerald: #18A77A; /* Success */
   --accent-rose: #C94C4C;
 
   /* Status Colors */
-  --status-positive: #2F8F72; /* Success */
+  --status-positive: #18A77A; /* Success */
   --status-positive-bg: #E5F4EF;
   --status-negative: #C94C4C; /* Error */
   --status-negative-bg: rgba(201, 76, 76, 0.12);

@@ -15,10 +15,6 @@ export const FloorPlanView = ({ setCurrentView }) => {
         </div>
 
         <div style={{ display: 'flex', gap: '0.75rem' }}>
-          <button className="btn btn-secondary" onClick={() => setCurrentView('threed')}>
-            <Box size={16} />
-            <span>3D Model</span>
-          </button>
           <button className="btn btn-primary" onClick={() => setCurrentView('predict')}>
             <span>Valuation Model</span>
           </button>

@@ -166,22 +166,21 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-start' }}>
-              <div style={{ display: 'flex', gap: '0.85rem', width: '100%', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '1rem', width: '100%', flexWrap: 'wrap' }}>
                 <button
                   className="btn btn-primary btn-lg"
-                  style={{ flex: '1 1 200px' }}
+                  style={{ flex: '1 1 auto', maxWidth: '280px', fontWeight: '700' }}
                   onClick={() => setCurrentView('predict')}
                 >
-                  <Sparkles size={18} />
                   <span>Predict Property Price</span>
-                  <ArrowRight size={18} />
+                  <ArrowRight size={20} />
                 </button>
 
                 <button
                   className="btn btn-secondary btn-lg"
-                  onClick={() => setCurrentView('threed')}
+                  style={{ flex: '1 1 auto', maxWidth: '240px', fontWeight: '600' }}
+                  onClick={() => setCurrentView('floorplan')}
                 >
-                  <Building size={18} color="var(--accent-cyan)" />
                   <span>Explore Properties</span>
                 </button>
               </div>
@@ -308,7 +307,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', pointerEvents: 'auto' }}>
                 <span className="stitch-pill-royal">
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4169E1', display: 'inline-block' }}></span>
-                  <span style={{ color: '#2446A8' }}>3D DIGITAL TWIN #PP-8402</span>
+                  <span style={{ color: '#2446A8' }}>2D DIGITAL TWIN #PP-8402</span>
                 </span>
                 <span style={{
                   padding: '0.25rem 0.65rem',
@@ -358,7 +357,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
               </div>
             </div>
 
-            {/* 2D Digital Canvas (3D Removed per requirement) */}
+            {/* 2D Digital Canvas */}
             <div style={{ height: '560px', background: 'var(--bg-surface-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
               <span>2D Property View</span>
             </div>
@@ -575,7 +574,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                   <Box size={24} />
                 </div>
                 <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Spatial Digital Twins</span>
-                <h3 style={{ fontSize: '1.25rem', marginTop: '0.25rem', marginBottom: '0.65rem' }}>Realistic 3D Architecture</h3>
+                <h3 style={{ fontSize: '1.25rem', marginTop: '0.25rem', marginBottom: '0.65rem' }}>Realistic 2D Architecture</h3>
                 <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
                   Interactive walkthroughs with solar orientation simulations, cross-sectional floor plates, and structural materiality inspection.
                 </p>
@@ -730,9 +729,9 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                 </div>
               </div>
               <div>
-                <h4 style={{ fontSize: '1.15rem', marginBottom: '0.4rem' }}>Unlock Valuation &amp; 3D</h4>
+                <h4 style={{ fontSize: '1.15rem', marginBottom: '0.4rem' }}>Unlock Valuation</h4>
                 <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1rem' }}>
-                  Export RERA-compliant valuation sheets, interact with 3D digital twins, and connect with certified listing partners.
+                  Export RERA-compliant valuation sheets, interact with digital twins, and connect with certified listing partners.
                 </p>
               </div>
               <div style={{ padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-surface)', fontSize: '0.76rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
