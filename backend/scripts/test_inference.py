@@ -2,8 +2,8 @@ import joblib
 import pandas as pd
 import json
 
-model = joblib.load(r"c:\Users\mggeh\OneDrive\Desktop\Anti-Gravity\proppluse\src\models\house_price_xgb_model.joblib")
-with open(r"c:\Users\mggeh\OneDrive\Desktop\Anti-Gravity\proppluse\src\models\model_metadata.json") as f:
+model = joblib.load(r"c:\Users\mggeh\OneDrive\Desktop\Anti-Gravity\proppluse\backend\models\house_price_xgb_model.joblib")
+with open(r"c:\Users\mggeh\OneDrive\Desktop\Anti-Gravity\proppluse\backend\models\model_metadata.json") as f:
     meta = json.load(f)
 
 print("Features expected:", meta["features"])

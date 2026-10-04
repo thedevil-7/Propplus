@@ -79,7 +79,7 @@ The execution environment includes core data science tools (`pandas`, `numpy`), 
     # Cell 4: Load Data
     add_code("""# Load dataset
 csv_candidates = [
-    "data/House Price India.csv",
+    "../data/House Price India.csv",
     "House Price India.csv",
     r"C:\\Users\\mggeh\\Downloads\\House Price India.csv"
 ]
@@ -285,7 +285,7 @@ feat_imp_df.head(10)""")
 
     # Cell 18: Serialization
     add_code("""# Serialize Production Artifacts
-model_output_dir = "src/models"
+model_output_dir = "backend/models"
 os.makedirs(model_output_dir, exist_ok=True)
 
 model_path = os.path.join(model_output_dir, "house_price_xgb_model.joblib")
@@ -306,9 +306,9 @@ print(f"Absolute Diff:   INR {abs(actual_val - predicted_val):,.2f}")""")
     add_md("""## Conclusion & Production Recommendation
 1. **Model Selection**: The **XGBoost Regressor** is chosen for deployment, having achieved an **$R^2$ of 0.9128**, **RMSE of ₹113,603**, and **MAPE of 12.16%** on unseen holdout test data.
 2. **Operational Viability**: Model inference latency is sub-5 milliseconds per record, with an artifact footprint of ~1.2 MB.
-3. **Integration**: The trained estimator weights and metadata are serialized to `src/models/` and ready for microservice deployment or front-end client sync in PropPulse.""")
+3. **Integration**: The trained estimator weights and metadata are serialized to `backend/models/` and ready for microservice deployment or front-end client sync in PropPulse.""")
 
-    out_file = r"c:\Users\mggeh\OneDrive\Desktop\Anti-Gravity\proppluse\notebooks\house_price_india_trained.ipynb"
+    out_file = r"c:\Users\mggeh\OneDrive\Desktop\Anti-Gravity\proppluse\backend\notebooks\house_price_india_trained.ipynb"
     os.makedirs(os.path.dirname(out_file), exist_ok=True)
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(nb, f, indent=1)
