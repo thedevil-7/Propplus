@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+import { formatPropertyValue } from '../utils/formatters';
   Sparkles,
   ArrowRight,
   Box,
@@ -51,7 +52,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
     else if (estCity === 'ahmedabad') baseRate = 5800;
 
     const totalVal = Math.round((areaNum * baseRate) / 100000); // in Lakhs
-    const inCr = (totalVal / 100).toFixed(2);
+    const inCr = totalVal;
     setQuickCalcResult({
       valueCr: inCr,
       rateSqft: baseRate,
@@ -68,7 +69,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
       market: 'Vaishali Nagar, Jaipur',
       config: '3 BHK • 1,850 sq.ft',
       price: '₹1,35,00,000',
-      priceTag: '₹1.35 Cr',
+      priceTag: '₹135 Lakhs',
       rate: '₹7,297 / sq.ft',
       confidence: '94% High',
       type: 'villa'
@@ -79,7 +80,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
       market: 'Malviya Nagar, Jaipur',
       config: '4 BHK • 2,420 sq.ft',
       price: '₹2,18,00,000',
-      priceTag: '₹2.18 Cr',
+      priceTag: '₹218 Lakhs',
       rate: '₹9,008 / sq.ft',
       confidence: '91% High',
       type: 'apartment'
@@ -90,7 +91,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
       market: 'C-Scheme, Jaipur',
       config: '3 BHK • 2,100 sq.ft',
       price: '₹2,95,00,000',
-      priceTag: '₹2.95 Cr',
+      priceTag: '₹295 Lakhs',
       rate: '₹14,047 / sq.ft',
       confidence: '88% Solid',
       type: 'penthouse'
@@ -112,7 +113,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
       market: 'Shastri Nagar, Jodhpur',
       config: '4 BHK • 2,800 sq.ft',
       price: '₹1,65,00,000',
-      priceTag: '₹1.65 Cr',
+      priceTag: '₹165 Lakhs',
       rate: '₹5,892 / sq.ft',
       confidence: '92% High',
       type: 'villa'
@@ -265,7 +266,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <CheckCircle2 size={18} color="var(--status-positive)" />
                   <span style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>
-                    Algorithmic Model Calibrated: Estimated Base <strong style={{ color: 'var(--status-positive)', fontSize: '1.05rem' }}>₹{quickCalcResult.valueCr} Cr</strong> (Confidence {quickCalcResult.confidence})
+                    Algorithmic Model Calibrated: Estimated Base <strong style={{ color: 'var(--status-positive)', fontSize: '1.05rem' }}>{formatPropertyValue(quickCalcResult.valueCr)}</strong> (Confidence {quickCalcResult.confidence})
                   </span>
                 </div>
 
@@ -436,14 +437,14 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', margin: '0.25rem 0' }}>
                   <span style={{ fontSize: '2rem', fontWeight: 800, color: '#3159C9', letterSpacing: '-0.02em' }}>₹1.35</span>
-                  <span style={{ fontSize: '1.2rem', fontWeight: 700, color: '#3159C9' }}>Crore</span>
+                  
                   <span style={{ fontSize: '0.8rem', color: '#40547D', marginLeft: 'auto' }}>(₹1,35,00,000)</span>
                 </div>
                 <div style={{ width: '100%', height: '4px', background: '#B8C8FF', borderRadius: '2px', overflow: 'hidden', margin: '0.5rem 0' }}>
                   <div style={{ width: '78%', height: '100%', background: '#4169E1' }}></div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: '#40547D' }}>
-                  <span>Range: ₹1.27 Cr — ₹1.42 Cr</span>
+                  <span>Range: ₹127 Lakhs — ₹142 Lakhs</span>
                   <span style={{ color: '#3159C9', fontWeight: 600 }}>R² 0.89 High</span>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Maximize2, Layers, Info, CheckCircle2, Download, HelpCircle, Lock } from 'lucide-react';
+import { formatPropertyValue } from '../../utils/formatters';
 
 // Pre-defined architectural layouts based on BHK and price tier
 const LAYOUT_TEMPLATES = {
@@ -141,7 +142,7 @@ export const DynamicFloorPlan = ({ property, planUsed }) => {
           <div style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <strong>{bedrooms} BHK {priceTier} Residence</strong> • 
             <span>{areaSqft} sq.ft.</span> •
-            <span>Estimated Value: ₹{priceLakhs} {priceLakhs > 100 ? 'Cr' : 'Lakhs'}</span>
+            <span>Estimated Value: {formatPropertyValue(priceLakhs).replace('₹', '')}</span>
           </div>
         </div>
         <div>

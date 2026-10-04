@@ -26,6 +26,7 @@ import { DynamicFloorPlan } from '../components/architectural/DynamicFloorPlan';
 import { propertyService } from '../api/propertyService';
 import { REGIONAL_LOCALITIES } from '../api/mockData';
 import { fetchIndianCities, getIndianCitiesSync } from '../api/cityService';
+import { formatPropertyValue } from '../utils/formatters';
 
 const AMENITY_OPTIONS = [
   "Gym",
@@ -264,7 +265,7 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
                               <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'var(--bg-surface-secondary)', borderRadius: '8px', border: '1px dashed var(--primary-300)' }}>
                                 <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>Live Calculation</div>
                                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary-700)' }}>
-                                  ₹{((parseFloat(area) * parseFloat(userPriceSqft)) / 100000).toFixed(2)} Lakh
+                                  {formatPropertyValue((parseFloat(area) * parseFloat(userPriceSqft)) / 100000)}
                                 </div>
                                 <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                                   {area} sq.ft. × ₹{userPriceSqft} / sq.ft.
@@ -694,7 +695,7 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
             </div>
 
             <div className="result-main-price" style={{ fontSize: '4.5rem', fontWeight: 800, color: 'var(--primary-700)', lineHeight: 1.1, marginBottom: '1rem' }}>
-              ₹{predictionResult.predictedValue?.toFixed(2)} <span style={{ fontSize: '2.25rem', color: 'var(--primary-500)' }}>Lakhs</span>
+              {formatPropertyValue(predictionResult.predictedValue)}
             </div>
             
             {predictionResult.planUsed === 'free' && (

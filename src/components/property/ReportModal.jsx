@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, CheckCircle2, Loader2, Download, FileText } from 'lucide-react';
 import { PropertyMap2D } from './PropertyMap2D';
 import { DynamicFloorPlan } from '../architectural/DynamicFloorPlan';
+import { formatPropertyValue } from '../../utils/formatters';
 export const ReportModal = ({ isOpen, onClose, property }) => {
   const [phase, setPhase] = useState('preparing'); // 'preparing' | 'ready' | 'error'
   const [progressStep, setProgressStep] = useState(0);
@@ -153,7 +154,7 @@ export const ReportModal = ({ isOpen, onClose, property }) => {
                 <div style={{ background: '#eef2ff', padding: '1.5rem', borderRadius: '8px', textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <h4 style={{ color: 'var(--primary-700)', margin: '0 0 0.5rem 0' }}>2. AI Estimated Property Value</h4>
                   <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary-700)' }}>
-                    ₹{property?.predictedValue?.toFixed(2)} Lakhs
+                    {formatPropertyValue(property?.predictedValue)}
                   </div>
                   <div style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
                     <strong>Value in ₹:</strong> ₹{(property?.predictedValue * 100000).toLocaleString()}
@@ -166,9 +167,9 @@ export const ReportModal = ({ isOpen, onClose, property }) => {
 
               <div style={{ marginBottom: '2rem' }}>
                 <h4 style={{ color: 'var(--primary-600)', borderBottom: '1px solid #ddd', paddingBottom: '0.5rem', marginBottom: '1rem' }}>3. Valuation Range</h4>
-                <p><strong>Minimum estimated value:</strong> ₹{property?.priceRange?.[0] || (property?.predictedValue * 0.9).toFixed(2)} Lakhs</p>
-                <p><strong>Most likely value:</strong> ₹{property?.predictedValue?.toFixed(2)} Lakhs</p>
-                <p><strong>Maximum estimated value:</strong> ₹{property?.priceRange?.[1] || (property?.predictedValue * 1.1).toFixed(2)} Lakhs</p>
+                <p><strong>Minimum estimated value:</strong> {formatPropertyValue(property?.priceRange?.[0] || property?.predictedValue * 0.9)}</p>
+                <p><strong>Most likely value:</strong> {formatPropertyValue(property?.predictedValue)}</p>
+                <p><strong>Maximum estimated value:</strong> {formatPropertyValue(property?.priceRange?.[1] || property?.predictedValue * 1.1)}</p>
               </div>
               
               <div style={{ marginBottom: '2rem' }}>
@@ -212,7 +213,7 @@ export const ReportModal = ({ isOpen, onClose, property }) => {
               <div style={{ marginBottom: '2rem' }}>
                 <h4 style={{ color: 'var(--primary-600)', borderBottom: '1px solid #ddd', paddingBottom: '0.5rem', marginBottom: '1rem' }}>9. AI Valuation Explanation</h4>
                 <p style={{ fontStyle: 'italic', background: '#f5f5f5', padding: '1rem', borderRadius: '4px', borderLeft: '4px solid var(--primary-500)' }}>
-                  “Based on the property characteristics ({property?.bedrooms} BHK {property?.propertyType} of {property?.area} sq.ft.), local market rates in {property?.locality}, comparable properties and available market data, PropPulse AI estimates the property's current fair value at ₹{property?.predictedValue?.toFixed(2)} Lakhs.”
+                  “Based on the property characteristics ({property?.bedrooms} BHK {property?.propertyType} of {property?.area} sq.ft.), local market rates in {property?.locality}, comparable properties and available market data, PropPulse AI estimates the property's current fair value at {formatPropertyValue(property?.predictedValue)}.”
                 </p>
               </div>
 

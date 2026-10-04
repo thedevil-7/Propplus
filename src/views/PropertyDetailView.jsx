@@ -3,7 +3,7 @@ import {
   Heart, ArrowLeft, Sparkles, TrendingUp, Info, Activity, ShieldAlert, FileText,
   Building2, LineChart, PieChart, ShieldCheck, Download
 } from 'lucide-react';
-
+import { formatPropertyValue } from '../utils/formatters';
 // Components
 const WhyThisPrice = ({ property }) => {
   return (
@@ -85,10 +85,10 @@ const InvestmentCalculator = ({ property, setCurrentView }) => {
            </div>
            <div style={{ flex: 1, minWidth: '300px', background: 'var(--bg-surface-secondary)', padding: '1.5rem', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Estimated Future Value (in 5 years)</h4>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary-700)', marginBottom: '1rem' }}>₹{(property.predictedValue * 1.4).toFixed(2)} Cr</div>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary-700)', marginBottom: '1rem' }}>{formatPropertyValue(property.predictedValue * 1.4)}</div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', borderTop: '1px solid var(--border-medium)', paddingTop: '1rem' }}>
                  <span style={{ color: 'var(--text-secondary)' }}>Net Profit Projection</span>
-                 <span style={{ fontWeight: 600, color: 'var(--status-positive)' }}>+₹{(property.predictedValue * 0.4).toFixed(2)} Cr</span>
+                 <span style={{ fontWeight: 600, color: 'var(--status-positive)' }}>+{formatPropertyValue(property.predictedValue * 0.4)}</span>
               </div>
            </div>
         </div>
@@ -137,7 +137,7 @@ const ComparableProperties = ({ property, setCurrentView }) => {
                   <span className={`badge ${comp.type === 'Sold' ? 'badge-ai' : 'badge-demo'}`}>{comp.type}</span>
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>0.4 km away</span>
                 </div>
-                <h4 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>₹{comp.price} Cr</h4>
+                <h4 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>{formatPropertyValue(comp.price)}</h4>
                 <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
                   {comp.area} sq.ft. • {property.bedrooms} BHK
                 </div>
@@ -637,7 +637,7 @@ export const PropertyDetailView = ({ property, onBack, setCurrentView }) => {
         <div className="result-hero-card" style={{ padding: '3rem', textAlign: 'center', background: 'var(--bg-surface)', border: '1px solid var(--border-medium)', borderRadius: '16px' }}>
           <h2 style={{ fontSize: '1.5rem', color: 'var(--text-secondary)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>PropPulse Fair Value</h2>
           <div className="result-main-price" style={{ fontSize: '4.5rem', fontWeight: 800, color: 'var(--primary-700)', lineHeight: 1.1, marginBottom: '1rem' }}>
-            ₹{property.predictedValue} <span style={{ fontSize: '2rem', color: 'var(--accent-blue)' }}>Cr</span>
+            {formatPropertyValue(property.predictedValue)}
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
             ₹{property.pricePerSqFt?.toLocaleString()} / sq.ft.
@@ -645,8 +645,8 @@ export const PropertyDetailView = ({ property, onBack, setCurrentView }) => {
           
           <div className="price-range-bar-wrap" style={{ maxWidth: '500px', margin: '0 auto 2rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-              <span>Lower: ₹{property.priceRange ? property.priceRange[0] : (property.predictedValue * 0.95).toFixed(1)} Cr</span>
-              <span>Upper: ₹{property.priceRange ? property.priceRange[1] : (property.predictedValue * 1.05).toFixed(1)} Cr</span>
+              <span>Lower: {formatPropertyValue(property.priceRange ? property.priceRange[0] : property.predictedValue * 0.95)}</span>
+              <span>Upper: {formatPropertyValue(property.priceRange ? property.priceRange[1] : property.predictedValue * 1.05)}</span>
             </div>
             <div className="range-gradient-track" style={{ height: '8px', background: 'var(--border-medium)', borderRadius: '4px', position: 'relative' }}>
               <div className="range-gradient-fill" style={{ position: 'absolute', top: 0, left: property.planUsed === 'free' ? '10%' : '20%', right: property.planUsed === 'free' ? '10%' : '20%', height: '100%', background: 'linear-gradient(90deg, var(--primary-300), var(--primary-600))', borderRadius: '4px' }} />
