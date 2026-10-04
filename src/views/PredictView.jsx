@@ -691,17 +691,22 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
               {predictionResult.pricingMethod === 'USER_PROVIDED' ? '🟢 User-Provided Rate' : `🔵 Propluse AI Estimate • Confidence ${predictionResult.aiScore}%`}
             </span>
             <div style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', fontWeight: 600, marginBottom: '0.5rem' }}>
-              Estimated Property Value
+              {predictionResult.planUsed === 'free' ? 'Basic AI Estimate' : 'Premium AI Precision Estimate'}
             </div>
 
             <div className="result-main-price" style={{ fontSize: '4.5rem', fontWeight: 800, color: 'var(--primary-700)', lineHeight: 1.1, marginBottom: '1rem' }}>
               {formatPropertyValue(predictionResult.predictedValue)}
             </div>
             
-            {predictionResult.planUsed === 'free' && (
+            {predictionResult.planUsed === 'free' ? (
               <div style={{ margin: '1rem 0 2rem', padding: '1rem', background: 'var(--bg-surface)', border: '1px solid var(--border-medium)', borderRadius: '8px' }}>
                 <span className="badge" style={{ background: '#FFD700', color: '#856404', padding: '4px 8px', fontSize: '0.8rem', fontWeight: 'bold' }}>FREE ESTIMATE</span>
-                <p style={{ marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Upgrade to Premium for detailed insights, tighter valuation ranges, and higher confidence.</p>
+                <p style={{ marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Upgrade to Premium for tighter valuation ranges, higher confidence and deeper market insights.</p>
+              </div>
+            ) : (
+              <div style={{ margin: '1rem 0 2rem', padding: '1rem', background: 'var(--bg-surface)', border: '1px solid var(--border-medium)', borderRadius: '8px' }}>
+                <span className="badge" style={{ background: 'var(--primary-600)', color: 'white', padding: '4px 8px', fontSize: '0.8rem', fontWeight: 'bold' }}>PREMIUM ESTIMATE</span>
+                <p style={{ marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Premium analysis uses enhanced comparable-property and locality insights for a more precise valuation.</p>
               </div>
             )}
 
