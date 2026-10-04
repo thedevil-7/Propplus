@@ -1,344 +1,317 @@
 import React, { useState, useMemo } from 'react';
-import { Maximize2, Layers, Info, CheckCircle2, Download, HelpCircle, Lock } from 'lucide-react';
 import { formatPropertyValue } from '../../utils/formatters';
 
-// Pre-defined architectural layouts based on BHK and price tier
+// Pre-defined architectural layout definitions with furniture coordinates
 const LAYOUT_TEMPLATES = {
-  1: {
-    Compact: [
-      { id: 'living', name: 'Living & Dining', type: 'public', x: 20, y: 20, w: 200, h: 250 },
-      { id: 'kitchen', name: 'Kitchen', type: 'culinary', x: 220, y: 20, w: 100, h: 100 },
-      { id: 'bed1', name: 'Bedroom', type: 'private', x: 220, y: 120, w: 150, h: 150 },
-      { id: 'bath1', name: 'Bathroom', type: 'sanitary', x: 320, y: 20, w: 50, h: 100 },
-    ],
-    Premium: [
-      { id: 'living', name: 'Large Living & Dining', type: 'public', x: 20, y: 20, w: 250, h: 300 },
-      { id: 'kitchen', name: 'Modular Kitchen', type: 'culinary', x: 270, y: 20, w: 150, h: 120 },
-      { id: 'bed1', name: 'Master Bedroom', type: 'private', x: 270, y: 140, w: 200, h: 180 },
-      { id: 'bath1', name: 'Ensuite Bath', type: 'sanitary', x: 420, y: 20, w: 50, h: 120 },
-      { id: 'balcony', name: 'Balcony', type: 'outdoor', x: 20, y: 320, w: 250, h: 60 },
-    ]
-  },
-  2: {
-    Compact: [
-      { id: 'living', name: 'Living Room', type: 'public', x: 20, y: 20, w: 200, h: 200 },
-      { id: 'kitchen', name: 'Kitchen', type: 'culinary', x: 220, y: 20, w: 100, h: 120 },
-      { id: 'bed1', name: 'Master Bed', type: 'private', x: 20, y: 220, w: 150, h: 150 },
-      { id: 'bath1', name: 'Bath 1', type: 'sanitary', x: 170, y: 220, w: 50, h: 80 },
-      { id: 'bed2', name: 'Bed 2', type: 'private', x: 220, y: 140, w: 150, h: 140 },
-      { id: 'bath2', name: 'Bath 2', type: 'sanitary', x: 370, y: 140, w: 50, h: 80 },
-    ],
-    Premium: [
-      { id: 'living', name: 'Premium Living', type: 'public', x: 20, y: 20, w: 250, h: 220 },
-      { id: 'kitchen', name: 'Open Kitchen', type: 'culinary', x: 270, y: 20, w: 150, h: 150 },
-      { id: 'bed1', name: 'Master Bed', type: 'private', x: 20, y: 240, w: 200, h: 180 },
-      { id: 'bath1', name: 'Master Bath', type: 'sanitary', x: 220, y: 240, w: 80, h: 100 },
-      { id: 'bed2', name: 'Guest Room', type: 'private', x: 300, y: 240, w: 180, h: 150 },
-      { id: 'bath2', name: 'Guest Bath', type: 'sanitary', x: 420, y: 20, w: 80, h: 100 },
-      { id: 'balcony', name: 'Large Balcony', type: 'outdoor', x: 20, y: 420, w: 460, h: 60 },
-    ]
-  },
-  3: {
-    Compact: [
-      { id: 'living', name: 'Living & Dining', type: 'public', x: 20, y: 20, w: 200, h: 250 },
-      { id: 'kitchen', name: 'Kitchen', type: 'culinary', x: 220, y: 20, w: 120, h: 120 },
-      { id: 'bed1', name: 'Master Bed', type: 'private', x: 20, y: 270, w: 150, h: 150 },
-      { id: 'bath1', name: 'Ensuite', type: 'sanitary', x: 170, y: 270, w: 50, h: 80 },
-      { id: 'bed2', name: 'Bed 2', type: 'private', x: 220, y: 140, w: 120, h: 130 },
-      { id: 'bed3', name: 'Bed 3', type: 'private', x: 340, y: 140, w: 120, h: 130 },
-      { id: 'bath2', name: 'Common Bath', type: 'sanitary', x: 340, y: 20, w: 80, h: 80 },
-      { id: 'balcony', name: 'Balcony', type: 'outdoor', x: 220, y: 270, w: 240, h: 50 },
-    ],
-    Premium: [
-      { id: 'living', name: 'Grand Living', type: 'public', x: 20, y: 20, w: 280, h: 220 },
-      { id: 'kitchen', name: 'Island Kitchen', type: 'culinary', x: 300, y: 20, w: 160, h: 150 },
-      { id: 'dining', name: 'Formal Dining', type: 'public', x: 20, y: 240, w: 150, h: 120 },
-      { id: 'bed1', name: 'Master Suite', type: 'private', x: 170, y: 240, w: 200, h: 180 },
-      { id: 'bath1', name: 'Master Bath', type: 'sanitary', x: 370, y: 240, w: 90, h: 110 },
-      { id: 'bed2', name: 'Bedroom 2', type: 'private', x: 460, y: 20, w: 160, h: 150 },
-      { id: 'bath2', name: 'Bath 2', type: 'sanitary', x: 460, y: 170, w: 80, h: 80 },
-      { id: 'bed3', name: 'Bedroom 3', type: 'private', x: 460, y: 250, w: 160, h: 170 },
-      { id: 'balcony', name: 'Sky Deck', type: 'outdoor', x: 20, y: 360, w: 150, h: 80 },
-    ]
-  },
-  4: {
-    Premium: [
-      { id: 'living', name: 'Luxury Living', type: 'public', x: 20, y: 20, w: 300, h: 250 },
-      { id: 'dining', name: 'Dining Hall', type: 'public', x: 20, y: 270, w: 150, h: 150 },
-      { id: 'kitchen', name: 'Chef Kitchen', type: 'culinary', x: 320, y: 20, w: 180, h: 180 },
-      { id: 'bed1', name: 'Master Suite', type: 'private', x: 170, y: 270, w: 220, h: 200 },
-      { id: 'bath1', name: 'Master Spa', type: 'sanitary', x: 390, y: 270, w: 110, h: 110 },
-      { id: 'bed2', name: 'Bedroom 2', type: 'private', x: 500, y: 20, w: 180, h: 160 },
-      { id: 'bath2', name: 'Bath 2', type: 'sanitary', x: 500, y: 180, w: 90, h: 90 },
-      { id: 'bed3', name: 'Bedroom 3', type: 'private', x: 500, y: 270, w: 180, h: 160 },
-      { id: 'bed4', name: 'Bedroom 4', type: 'private', x: 680, y: 20, w: 160, h: 160 },
-      { id: 'bath3', name: 'Common Bath', type: 'sanitary', x: 680, y: 180, w: 90, h: 90 },
-      { id: 'balcony', name: 'Panoramic Balcony', type: 'outdoor', x: 20, y: 420, w: 300, h: 80 },
-    ]
+  1: [
+    { id: 'living', name: 'Living Room', x: 20, y: 20, w: 250, h: 300, door: {x: 20, y: 50, w: 10, h: 40}, furniture: [{type: 'sofa', x: 40, y: 40}, {type: 'tv', x: 220, y: 150}] },
+    { id: 'kitchen', name: 'Kitchen', x: 270, y: 20, w: 150, h: 180, door: {x: 270, y: 100, w: 10, h: 40}, furniture: [{type: 'counter', x: 290, y: 40}] },
+    { id: 'bed1', name: 'Bedroom', x: 270, y: 200, w: 200, h: 220, door: {x: 270, y: 220, w: 10, h: 40}, furniture: [{type: 'bed', x: 300, y: 220}, {type: 'wardrobe', x: 420, y: 220}] },
+    { id: 'bath1', name: 'Bathroom', x: 470, y: 200, w: 100, h: 140, door: {x: 470, y: 220, w: 10, h: 30}, furniture: [{type: 'tub', x: 490, y: 220}] },
+    { id: 'balcony', name: 'Balcony', x: 20, y: 320, w: 250, h: 100, door: {x: 100, y: 320, w: 40, h: 10}, furniture: [{type: 'plant', x: 40, y: 340}] }
+  ],
+  2: [
+    { id: 'living', name: 'Living Room', x: 20, y: 20, w: 280, h: 250, door: {x: 20, y: 50, w: 10, h: 40}, furniture: [{type: 'sofa', x: 40, y: 40}, {type: 'tv', x: 250, y: 120}] },
+    { id: 'dining', name: 'Dining Area', x: 20, y: 270, w: 150, h: 150, door: null, furniture: [{type: 'dining_table', x: 50, y: 290}] },
+    { id: 'kitchen', name: 'Kitchen', x: 170, y: 270, w: 130, h: 150, door: {x: 170, y: 290, w: 10, h: 40}, furniture: [{type: 'counter', x: 190, y: 290}] },
+    { id: 'bed1', name: 'Master Bedroom', x: 300, y: 20, w: 200, h: 200, door: {x: 300, y: 50, w: 10, h: 40}, furniture: [{type: 'bed', x: 340, y: 40}, {type: 'wardrobe', x: 450, y: 40}] },
+    { id: 'bath1', name: 'Ensuite', x: 500, y: 20, w: 100, h: 120, door: {x: 500, y: 40, w: 10, h: 30}, furniture: [{type: 'tub', x: 520, y: 40}] },
+    { id: 'bed2', name: 'Bedroom 2', x: 300, y: 220, w: 180, h: 200, door: {x: 300, y: 250, w: 10, h: 40}, furniture: [{type: 'bed', x: 340, y: 240}] },
+    { id: 'bath2', name: 'Bathroom', x: 480, y: 220, w: 100, h: 100, door: {x: 480, y: 240, w: 10, h: 30}, furniture: [{type: 'tub', x: 500, y: 240}] },
+    { id: 'balcony', name: 'Balcony', x: 20, y: 420, w: 280, h: 80, door: {x: 120, y: 420, w: 40, h: 10}, furniture: [{type: 'plant', x: 40, y: 440}] }
+  ],
+  3: [
+    { id: 'living', name: 'Large Living Room', x: 20, y: 20, w: 320, h: 260, door: {x: 20, y: 60, w: 10, h: 50}, furniture: [{type: 'sofa', x: 50, y: 50}, {type: 'tv', x: 280, y: 120}] },
+    { id: 'dining', name: 'Dining Area', x: 20, y: 280, w: 160, h: 180, door: null, furniture: [{type: 'dining_table', x: 50, y: 310}] },
+    { id: 'kitchen', name: 'Kitchen', x: 180, y: 280, w: 160, h: 180, door: {x: 180, y: 300, w: 10, h: 40}, furniture: [{type: 'counter', x: 210, y: 300}] },
+    { id: 'bed1', name: 'Master Bedroom', x: 340, y: 20, w: 220, h: 220, door: {x: 340, y: 60, w: 10, h: 40}, furniture: [{type: 'bed', x: 380, y: 40}, {type: 'wardrobe', x: 510, y: 40}] },
+    { id: 'bath1', name: 'Master Bath', x: 560, y: 20, w: 110, h: 130, door: {x: 560, y: 40, w: 10, h: 30}, furniture: [{type: 'tub', x: 580, y: 40}] },
+    { id: 'bed2', name: 'Bedroom 2', x: 340, y: 240, w: 180, h: 220, door: {x: 340, y: 270, w: 10, h: 40}, furniture: [{type: 'bed', x: 370, y: 260}] },
+    { id: 'bath2', name: 'Common Bath', x: 520, y: 240, w: 110, h: 100, door: {x: 520, y: 260, w: 10, h: 30}, furniture: [{type: 'tub', x: 540, y: 260}] },
+    { id: 'bed3', name: 'Bedroom 3', x: 520, y: 340, w: 160, h: 160, door: {x: 520, y: 380, w: 10, h: 40}, furniture: [{type: 'bed', x: 550, y: 360}] },
+    { id: 'balcony', name: 'Balcony', x: 20, y: 460, w: 320, h: 80, door: {x: 140, y: 460, w: 50, h: 10}, furniture: [{type: 'plant', x: 50, y: 480}] },
+    { id: 'utility', name: 'Utility Area', x: 680, y: 20, w: 80, h: 120, door: {x: 680, y: 40, w: 10, h: 30}, furniture: [] }
+  ],
+  4: [
+    { id: 'living', name: 'Large Living Room', x: 20, y: 20, w: 350, h: 280, door: {x: 20, y: 80, w: 10, h: 50}, furniture: [{type: 'sofa', x: 60, y: 60}, {type: 'tv', x: 310, y: 140}] },
+    { id: 'dining', name: 'Dining', x: 20, y: 300, w: 180, h: 200, door: null, furniture: [{type: 'dining_table', x: 60, y: 330}] },
+    { id: 'kitchen', name: 'Modular Kitchen', x: 200, y: 300, w: 170, h: 200, door: {x: 200, y: 330, w: 10, h: 40}, furniture: [{type: 'counter', x: 230, y: 330}] },
+    { id: 'bed1', name: 'Master Bedroom', x: 370, y: 20, w: 250, h: 240, door: {x: 370, y: 70, w: 10, h: 40}, furniture: [{type: 'bed', x: 410, y: 50}, {type: 'wardrobe', x: 570, y: 50}] },
+    { id: 'bath1', name: 'Master Bath', x: 620, y: 20, w: 140, h: 150, door: {x: 620, y: 50, w: 10, h: 30}, furniture: [{type: 'tub', x: 650, y: 50}] },
+    { id: 'wardrobe1', name: 'Walk-in Wardrobe', x: 620, y: 170, w: 140, h: 90, door: {x: 620, y: 190, w: 10, h: 30}, furniture: [] },
+    { id: 'bed2', name: 'Bedroom 2', x: 370, y: 260, w: 200, h: 240, door: {x: 370, y: 290, w: 10, h: 40}, furniture: [{type: 'bed', x: 400, y: 280}] },
+    { id: 'bath2', name: 'Bath 2', x: 570, y: 260, w: 120, h: 120, door: {x: 570, y: 280, w: 10, h: 30}, furniture: [{type: 'tub', x: 590, y: 280}] },
+    { id: 'bed3', name: 'Bedroom 3', x: 570, y: 380, w: 180, h: 160, door: {x: 570, y: 410, w: 10, h: 40}, furniture: [{type: 'bed', x: 600, y: 400}] },
+    { id: 'bed4', name: 'Bedroom 4', x: 760, y: 20, w: 160, h: 200, door: {x: 760, y: 50, w: 10, h: 40}, furniture: [{type: 'bed', x: 790, y: 50}] },
+    { id: 'bath4', name: 'Bath 4', x: 760, y: 220, w: 160, h: 100, door: {x: 760, y: 250, w: 10, h: 30}, furniture: [{type: 'tub', x: 790, y: 250}] },
+    { id: 'balcony', name: 'Balcony', x: 20, y: 500, w: 350, h: 80, door: {x: 160, y: 500, w: 50, h: 10}, furniture: [{type: 'plant', x: 60, y: 520}] },
+    { id: 'utility', name: 'Utility', x: 750, y: 380, w: 100, h: 160, door: {x: 750, y: 410, w: 10, h: 30}, furniture: [] }
+  ]
+};
+
+const FurnitureIcon = ({ type, x, y, scale }) => {
+  switch(type) {
+    case 'sofa':
+      return <path d={`M${x},${y} h${60*scale} v${20*scale} h${-60*scale} Z`} fill="#EAF0FF" stroke="#3159C9" strokeWidth="1" />;
+    case 'bed':
+      return <rect x={x} y={y} width={50*scale} height={60*scale} rx="2" fill="#EAF0FF" stroke="#3159C9" strokeWidth="1" />;
+    case 'dining_table':
+      return <circle cx={x+30*scale} cy={y+30*scale} r={25*scale} fill="#EAF0FF" stroke="#3159C9" strokeWidth="1" />;
+    case 'counter':
+      return <rect x={x} y={y} width={60*scale} height={30*scale} fill="#EAF0FF" stroke="#3159C9" strokeWidth="1" />;
+    case 'wardrobe':
+      return <rect x={x} y={y} width={40*scale} height={20*scale} fill="#F0F4FF" stroke="#3159C9" strokeWidth="1" />;
+    case 'tv':
+      return <rect x={x} y={y} width={40*scale} height={5*scale} fill="#3159C9" />;
+    case 'tub':
+      return <rect x={x} y={y} width={30*scale} height={20*scale} rx="10" fill="#EAF0FF" stroke="#3159C9" strokeWidth="1" />;
+    case 'plant':
+      return <circle cx={x+10*scale} cy={y+10*scale} r={10*scale} fill="#EAF0FF" stroke="#3159C9" strokeWidth="1" />;
+    default:
+      return null;
   }
 };
 
-const getRoomColor = (type, isSelected) => {
-  if (isSelected) return 'rgba(56, 189, 248, 0.4)'; // bright blue highlight
-  switch (type) {
-    case 'public': return 'rgba(30, 41, 59, 0.5)'; // living/dining
-    case 'private': return 'rgba(99, 102, 241, 0.2)'; // bedrooms
-    case 'culinary': return 'rgba(16, 185, 129, 0.2)'; // kitchen
-    case 'sanitary': return 'rgba(148, 163, 184, 0.2)'; // bathrooms
-    case 'outdoor': return 'rgba(245, 158, 11, 0.2)'; // balcony
-    default: return 'rgba(30, 41, 59, 0.5)';
-  }
-};
+export const DynamicFloorPlan = ({ property }) => {
+  const [showFurniture, setShowFurniture] = useState(false);
+  const [showDimensions, setShowDimensions] = useState(false);
+  const [roomsMode, setRoomsMode] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({x: 0, y: 0});
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({x: 0, y: 0});
 
-export const DynamicFloorPlan = ({ property, planUsed }) => {
-  const [activeTab, setActiveTab] = useState('floorplan');
-  const [selectedRoom, setSelectedRoom] = useState('living');
-  const [layoutVariant, setLayoutVariant] = useState(0);
-
-  const isPremium = planUsed !== 'free';
-  const priceLakhs = property?.predictedValue || 75;
-  const areaSqft = property?.area || 1200;
+  const propertyId = property?.id || "PP-8402";
   const bedrooms = Math.min(4, Math.max(1, parseInt(property?.bedrooms) || 2));
-
-  // Determine Price Tier
-  let priceTier = 'Compact';
-  if (priceLakhs > 100) priceTier = 'Premium';
+  const areaSqft = property?.area || 1200;
+  const location = property?.locality ? `${property.locality}, ${property.location}` : (property?.location || "Jaipur");
   
-  // Force 4BHK to premium
-  if (bedrooms >= 4) priceTier = 'Premium';
+  const layout = LAYOUT_TEMPLATES[bedrooms] || LAYOUT_TEMPLATES[2];
 
-  const layoutOptions = LAYOUT_TEMPLATES[bedrooms]?.[priceTier] 
-    ? [LAYOUT_TEMPLATES[bedrooms][priceTier]] 
-    : [LAYOUT_TEMPLATES[bedrooms]['Compact'] || LAYOUT_TEMPLATES[2]['Compact']];
+  // Dynamic scaling based on area
+  const baseArea = bedrooms === 1 ? 600 : bedrooms === 2 ? 1000 : bedrooms === 3 ? 1500 : 2500;
+  const scaleRatio = Math.sqrt(Math.max(0.5, areaSqft / baseArea));
 
-  // In premium mode, we might want to generate alternative variations
-  // For demo, we just simulate by slightly tweaking positions or using same if no alternatives
-  const currentLayout = layoutOptions[layoutVariant % layoutOptions.length];
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+  };
 
-  // Scale factor based on area
-  // Base assumed area for layout is ~1000 sqft. If larger, we scale the SVG visually or adjust text
-  const scaleRatio = Math.max(1, areaSqft / 1000);
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      setPan({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+    }
+  };
 
-  const selectedRoomDetails = currentLayout.find(r => r.id === selectedRoom) || currentLayout[0];
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
-  const handleRoomClick = (id) => setSelectedRoom(id);
+  const resetView = () => {
+    setZoom(1);
+    setPan({x: 0, y: 0});
+    setShowFurniture(false);
+    setShowDimensions(false);
+    setRoomsMode(false);
+    setSelectedRoom(null);
+  };
 
-  const renderDisclaimer = () => (
-    <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '8px', display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-      <Info size={18} color="var(--accent-amber)" style={{ marginTop: '2px', flexShrink: 0 }} />
-      <div>
-        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--accent-amber)', marginBottom: '0.25rem' }}>AI-GENERATED CONCEPTUAL FLOOR PLAN</div>
-        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>This floor plan is an AI-generated conceptual representation and should not be used as an architectural, structural, legal, or construction drawing.</div>
-      </div>
-    </div>
-  );
+  // Convert SVG coordinate area to square feet approx
+  const getRoomDims = (w, h) => {
+    // 10 svg units ~ 1 foot
+    const wFt = Math.round((w / 15) * scaleRatio);
+    const hFt = Math.round((h / 15) * scaleRatio);
+    return `${wFt}' × ${hFt}'`;
+  };
+
+  const getRoomArea = (w, h) => {
+    const wFt = (w / 15) * scaleRatio;
+    const hFt = (h / 15) * scaleRatio;
+    return Math.round(wFt * hFt);
+  };
+
+  const getRoomColor = (roomId) => {
+    if (selectedRoom === roomId) return '#EAF0FF';
+    if (roomsMode) return '#F8FAFC';
+    return '#FFFFFF';
+  };
 
   return (
     <div className="card" style={{ padding: '2rem', marginBottom: '2.5rem', background: '#FFFFFF', border: '1px solid var(--border-medium)', borderRadius: '12px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
+      
+      {/* HEADER */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-medium)', paddingBottom: '1.5rem' }}>
         <div>
-          <span className="section-tag">2D Property View</span>
-          <h2 style={{ fontSize: '1.8rem', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>AI-Generated 2D Floor Plan</h2>
-          <div style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-            <strong>{bedrooms} BHK {priceTier} Residence</strong> • 
-            <span>{areaSqft} sq.ft.</span> •
-            <span>Estimated Value: {formatPropertyValue(priceLakhs).replace('₹', '')}</span>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 700, letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+            AI GENERATED 2D FLOOR PLAN
+          </div>
+          <div style={{ fontSize: '1.5rem', color: 'var(--primary-700)', fontWeight: 800, marginBottom: '0.5rem' }}>
+            {bedrooms} BHK • {areaSqft.toLocaleString()} sq.ft • {location}
+          </div>
+          <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+            Property ID: {propertyId}
           </div>
         </div>
-        <div>
-          {isPremium ? (
-            <span className="badge badge-ai" style={{ padding: '0.5rem 1rem' }}>✦ PREMIUM AI FLOOR PLAN</span>
-          ) : (
-            <span className="badge badge-demo" style={{ padding: '0.5rem 1rem' }}>STANDARD FLOOR PLAN</span>
-          )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
+          <span className="badge" style={{ background: '#F0F4FF', color: '#3159C9', border: '1px solid #3159C9', padding: '6px 12px', fontSize: '0.8rem', fontWeight: 700 }}>
+            ✦ AI GENERATED
+          </span>
+          <span className="badge" style={{ background: 'var(--bg-surface-secondary)', color: 'var(--text-secondary)', padding: '6px 12px', fontSize: '0.75rem' }}>
+            PROPERTY-SPECIFIC LAYOUT
+          </span>
         </div>
       </div>
 
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-medium)', marginBottom: '1.5rem' }}>
-        {['floorplan', 'property-details', 'dimensions'].map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: '0.75rem 1.5rem',
-              background: 'none',
-              border: 'none',
-              borderBottom: activeTab === tab ? '2px solid var(--accent-blue)' : '2px solid transparent',
-              color: activeTab === tab ? 'var(--accent-blue)' : 'var(--text-secondary)',
-              fontWeight: activeTab === tab ? 600 : 400,
-              cursor: 'pointer',
-              textTransform: 'capitalize'
-            }}
+      {/* CONTROLS */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <button 
+            onClick={() => { setShowFurniture(false); setShowDimensions(false); setRoomsMode(false); setSelectedRoom(null); }}
+            style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #3159C9', background: (!showFurniture && !showDimensions && !roomsMode) ? '#3159C9' : '#FFF', color: (!showFurniture && !showDimensions && !roomsMode) ? '#FFF' : '#3159C9', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
           >
-            {tab.replace('-', ' ')}
+            Floor Plan
           </button>
-        ))}
+          <button 
+            onClick={() => { setShowFurniture(!showFurniture); setRoomsMode(false); }}
+            style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #3159C9', background: showFurniture ? '#3159C9' : '#FFF', color: showFurniture ? '#FFF' : '#3159C9', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+          >
+            Furniture
+          </button>
+          <button 
+            onClick={() => { setShowDimensions(!showDimensions); setRoomsMode(false); }}
+            style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #3159C9', background: showDimensions ? '#3159C9' : '#FFF', color: showDimensions ? '#FFF' : '#3159C9', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+          >
+            Dimensions
+          </button>
+          <button 
+            onClick={() => { setRoomsMode(!roomsMode); setShowFurniture(false); setShowDimensions(false); }}
+            style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #3159C9', background: roomsMode ? '#3159C9' : '#FFF', color: roomsMode ? '#FFF' : '#3159C9', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+          >
+            Rooms
+          </button>
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button onClick={() => setZoom(z => Math.min(z + 0.2, 3))} style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid var(--border-medium)', background: '#FFF', cursor: 'pointer' }}>+</button>
+          <button onClick={() => setZoom(z => Math.max(z - 0.2, 0.5))} style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid var(--border-medium)', background: '#FFF', cursor: 'pointer' }}>-</button>
+          <button onClick={resetView} style={{ padding: '6px 16px', borderRadius: '6px', border: '1px solid var(--border-medium)', background: '#F8FAFC', color: 'var(--text-secondary)', fontWeight: 600, cursor: 'pointer' }}>Reset</button>
+        </div>
       </div>
 
-      {activeTab === 'floorplan' && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}>
-          
-          {/* LEFT: Canvas */}
-          <div style={{ flex: '1 1 500px', background: '#080D1A', borderRadius: '12px', padding: '1.5rem', position: 'relative' }}>
-            <svg viewBox="0 0 900 550" style={{ width: '100%', height: 'auto', maxHeight: '450px' }}>
-              <defs>
-                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-              
-              {/* Outer boundary based on max extents */}
-              <rect x="15" y="15" width="870" height="520" fill="none" stroke="#334155" strokeWidth="4" rx="2" />
-
-              {currentLayout.map((room) => {
-                const isSelected = selectedRoom === room.id;
-                return (
-                  <g 
-                    key={room.id} 
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleRoomClick(room.id)}
-                  >
+      {/* SVG CONTAINER */}
+      <div 
+        style={{ 
+          width: '100%', 
+          height: '500px', 
+          background: '#F8FAFC', 
+          borderRadius: '12px', 
+          border: '1px solid #E2E8F0',
+          overflow: 'hidden',
+          position: 'relative',
+          cursor: isDragging ? 'grabbing' : 'grab'
+        }}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
+        <div style={{
+          transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+          transformOrigin: 'center',
+          transition: isDragging ? 'none' : 'transform 0.2s',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <svg viewBox="0 0 1000 650" style={{ width: '100%', height: '100%', maxWidth: '900px' }}>
+            <g transform={`scale(${scaleRatio}) translate(${(1 - scaleRatio) * 500}, ${(1 - scaleRatio) * 300})`}>
+              {/* Rooms */}
+              {layout.map((room) => (
+                <g 
+                  key={room.id}
+                  onClick={(e) => {
+                    if (roomsMode) {
+                      e.stopPropagation();
+                      setSelectedRoom(room.id);
+                    }
+                  }}
+                  style={{ cursor: roomsMode ? 'pointer' : 'default' }}
+                >
+                  <rect 
+                    x={room.x} y={room.y} width={room.w} height={room.h}
+                    fill={getRoomColor(room.id)}
+                    stroke="#AAB8E0"
+                    strokeWidth="2"
+                  />
+                  
+                  {/* Doors */}
+                  {room.door && (
                     <rect 
-                      x={room.x} y={room.y} 
-                      width={room.w} height={room.h} 
-                      fill={getRoomColor(room.type, isSelected)} 
-                      stroke={isSelected ? '#38BDF8' : '#475569'} 
-                      strokeWidth={isSelected ? 3 : 1.5}
+                      x={room.door.x} y={room.door.y} 
+                      width={room.door.w} height={room.door.h}
+                      fill="#FFFFFF"
+                      stroke="#AAB8E0"
+                      strokeWidth="1"
                     />
+                  )}
+
+                  {/* Furniture */}
+                  {showFurniture && room.furniture?.map((furn, idx) => (
+                    <FurnitureIcon key={idx} type={furn.type} x={furn.x} y={furn.y} scale={1} />
+                  ))}
+
+                  {/* Room Name & Dimensions */}
+                  {(!roomsMode || selectedRoom === room.id || !selectedRoom) && (
                     <text 
-                      x={room.x + room.w/2} 
-                      y={room.y + room.h/2} 
-                      fill={isSelected ? '#FFFFFF' : '#94A3B8'} 
+                      x={room.x + room.w / 2} 
+                      y={room.y + room.h / 2} 
+                      fill="#3159C9" 
                       fontSize="14" 
                       fontWeight="600" 
                       textAnchor="middle"
+                      style={{ pointerEvents: 'none' }}
                     >
                       {room.name.toUpperCase()}
                     </text>
-                    {isPremium && (
-                      <text 
-                        x={room.x + room.w/2} 
-                        y={room.y + room.h/2 + 20} 
-                        fill={isSelected ? '#38BDF8' : '#64748B'} 
-                        fontSize="11" 
-                        textAnchor="middle"
-                      >
-                        {Math.round((room.w * room.h * scaleRatio) / 100)} sq.ft
-                      </text>
-                    )}
-                  </g>
-                );
-              })}
-            </svg>
-          </div>
+                  )}
 
-          {/* RIGHT: Interaction Panel */}
-          <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <div style={{ padding: '1.5rem', background: 'var(--bg-surface-secondary)', borderRadius: '12px' }}>
-              <h3 style={{ fontSize: '1.3rem', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>{selectedRoomDetails.name.toUpperCase()}</h3>
-              <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                <div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Estimated Area</div>
-                  <div style={{ fontWeight: 700, color: 'var(--accent-blue)', fontSize: '1.1rem' }}>
-                    {Math.round((selectedRoomDetails.w * selectedRoomDetails.h * scaleRatio) / 100)} sq.ft.
-                  </div>
-                </div>
-                {isPremium && (
-                  <div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Dimensions</div>
-                    <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                      {Math.round(selectedRoomDetails.w/15 * Math.sqrt(scaleRatio))}' × {Math.round(selectedRoomDetails.h/15 * Math.sqrt(scaleRatio))}'
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                <strong style={{ color: 'var(--text-primary)' }}>Features:</strong>
-                <ul style={{ paddingLeft: '1.2rem', marginTop: '0.5rem' }}>
-                  <li>Optimized {selectedRoomDetails.type} zone</li>
-                  {selectedRoomDetails.type === 'private' && <li>Natural lighting provisions</li>}
-                  {selectedRoomDetails.type === 'culinary' && <li>Modular layout compatible</li>}
-                  {selectedRoomDetails.type === 'public' && <li>Spacious circulation path</li>}
-                </ul>
-              </div>
+                  {showDimensions && (
+                    <text 
+                      x={room.x + room.w / 2} 
+                      y={room.y + room.h / 2 + 20} 
+                      fill="#64748B" 
+                      fontSize="12" 
+                      fontWeight="500"
+                      textAnchor="middle"
+                      style={{ pointerEvents: 'none' }}
+                    >
+                      {getRoomDims(room.w, room.h)}
+                    </text>
+                  )}
+                </g>
+              ))}
+            </g>
+          </svg>
+        </div>
+
+        {/* Selected Room Info Card */}
+        {roomsMode && selectedRoom && (
+          <div style={{ position: 'absolute', bottom: '20px', left: '20px', background: '#FFFFFF', padding: '16px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', border: '1px solid #E2E8F0', minWidth: '200px' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#3159C9', marginBottom: '8px' }}>
+              {layout.find(r => r.id === selectedRoom)?.name}
             </div>
-
-            {isPremium ? (
-              <div style={{ padding: '1.5rem', background: 'var(--bg-surface-secondary)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '12px' }}>
-                <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-blue)', marginBottom: '0.75rem', fontSize: '1rem' }}>
-                  ✦ NEXAAGENT FLOOR PLAN INSIGHT
-                </h4>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, fontStyle: 'italic' }}>
-                  "Based on the property's {areaSqft} sq.ft. built-up area and {bedrooms} BHK configuration, this layout prioritizes a larger living area, a dedicated space, and optimal {selectedRoomDetails.name.toLowerCase()} placement while maintaining efficient circulation."
-                </p>
-              </div>
-            ) : (
-              <div style={{ padding: '1.5rem', background: 'var(--bg-surface-secondary)', borderRadius: '12px', textAlign: 'center' }}>
-                <Lock size={20} color="var(--text-muted)" style={{ margin: '0 auto 0.5rem' }} />
-                <h4 style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>AI Insights Locked</h4>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Upgrade to Premium for NexaAgent architectural insights, detailed room dimensions, and alternative layout options.</p>
-              </div>
-            )}
-
-            {isPremium && (
-              <div>
-                <h4 style={{ fontSize: '0.95rem', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Explore Alternative Layouts</h4>
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  <button className="btn btn-secondary btn-sm" onClick={() => setLayoutVariant(0)}>Family Focused</button>
-                  <button className="btn btn-secondary btn-sm" onClick={() => setLayoutVariant(1)}>Maximum Space</button>
-                  <button className="btn btn-secondary btn-sm" onClick={() => setLayoutVariant(2)}>Rental Optimized</button>
-                </div>
-              </div>
-            )}
-            
-            {isPremium && (
-              <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                <Download size={16} /> Download 2D Floor Plan
-              </button>
-            )}
+            <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+              Size: {getRoomDims(layout.find(r => r.id === selectedRoom)?.w, layout.find(r => r.id === selectedRoom)?.h)}
+            </div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+              Approx. Area: {getRoomArea(layout.find(r => r.id === selectedRoom)?.w, layout.find(r => r.id === selectedRoom)?.h)} sq.ft
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {activeTab === 'property-details' && (
-        <div style={{ padding: '2rem', background: 'var(--bg-surface-secondary)', borderRadius: '8px' }}>
-           <h3 style={{ marginBottom: '1rem' }}>Property Configuration</h3>
-           <p style={{ color: 'var(--text-secondary)' }}>This property utilizes a {bedrooms} BHK layout with {areaSqft} sq.ft. of space.</p>
-           {/* Can be expanded based on inputs */}
-        </div>
-      )}
-
-      {activeTab === 'dimensions' && (
-        <div style={{ padding: '2rem', background: 'var(--bg-surface-secondary)', borderRadius: '8px' }}>
-           <h3 style={{ marginBottom: '1rem' }}>Room Dimensions Summary</h3>
-           <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
-             <thead>
-               <tr style={{ borderBottom: '1px solid var(--border-medium)' }}>
-                 <th style={{ padding: '0.75rem 0' }}>Room</th>
-                 <th style={{ padding: '0.75rem 0' }}>Type</th>
-                 <th style={{ padding: '0.75rem 0' }}>Area (sq.ft)</th>
-                 {isPremium && <th style={{ padding: '0.75rem 0' }}>Est. Dimensions</th>}
-               </tr>
-             </thead>
-             <tbody>
-               {currentLayout.map(room => (
-                 <tr key={room.id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                   <td style={{ padding: '0.75rem 0', fontWeight: 500 }}>{room.name}</td>
-                   <td style={{ padding: '0.75rem 0', color: 'var(--text-muted)' }}>{room.type}</td>
-                   <td style={{ padding: '0.75rem 0', color: 'var(--accent-blue)', fontWeight: 600 }}>{Math.round((room.w * room.h * scaleRatio) / 100)}</td>
-                   {isPremium && <td style={{ padding: '0.75rem 0', color: 'var(--text-secondary)' }}>
-                     {Math.round(room.w/15 * Math.sqrt(scaleRatio))}' × {Math.round(room.h/15 * Math.sqrt(scaleRatio))}'
-                   </td>}
-                 </tr>
-               ))}
-             </tbody>
-           </table>
-        </div>
-      )}
-
-      {renderDisclaimer()}
     </div>
   );
 };
