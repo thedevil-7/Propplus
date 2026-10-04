@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Cpu, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
 
 export const AIAnalysisLoading = ({ onComplete }) => {
@@ -12,6 +12,13 @@ export const AIAnalysisLoading = ({ onComplete }) => {
 
   const [currentStep, setCurrentStep] = useState(0);
 
+  const onCompleteRef = useRef(onComplete);
+  const completedRef = useRef(false);
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentStep((prev) => {
@@ -20,7 +27,10 @@ export const AIAnalysisLoading = ({ onComplete }) => {
         } else {
           clearInterval(interval);
           setTimeout(() => {
-            if (onComplete) onComplete();
+            if (!completedRef.current) {
+              completedRef.current = true;
+              if (onCompleteRef.current) onCompleteRef.current();
+            }
           }, 600);
           return prev;
         }
@@ -28,7 +38,7 @@ export const AIAnalysisLoading = ({ onComplete }) => {
     }, 700);
 
     return () => clearInterval(interval);
-  }, [onComplete, steps.length]);
+  }, [steps.length]);
 
   return (
     <div className="ai-loading-container">

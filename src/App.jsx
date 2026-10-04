@@ -143,9 +143,6 @@ export function App() {
       setCredits(prev => Math.max(0, prev - 1));
     }
     showToast(`AI Valuation Complete: ₹${newProp.predictedValue} Lakhs`, 'success');
-    setTimeout(() => {
-      scrollToSection('properties');
-    }, 450);
   };
 
   const handleDeleteHistoryRecord = async (id) => {
