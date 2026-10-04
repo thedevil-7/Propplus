@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import {
 import { formatPropertyValue } from '../utils/formatters';
+import {
   Sparkles,
   ArrowRight,
   Box,
