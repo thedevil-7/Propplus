@@ -8,8 +8,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
-const DATA_FILE = path.join(__dirname, 'db.json');
+const PORT = process.env.PORT || 3000;
+const DATA_FILE = path.join(__dirname, '../storage/db.json');
 
 app.use(cors());
 app.use(express.json());
@@ -45,7 +45,11 @@ const initializeDb = () => {
         ]
       }
     };
-    fs.writeFileSync(DATA_FILE, JSON.stringify(initialData, null, 2));
+    try {
+      fs.writeFileSync(DATA_FILE, JSON.stringify(initialData, null, 2));
+    } catch (err) {
+      console.warn("Deployment Limitation: Cannot initialize DB on Vercel read-only filesystem.", err.message);
+    }
   }
 };
 
@@ -53,13 +57,26 @@ initializeDb();
 
 // Helper to read DB
 const readDb = () => {
-  const data = fs.readFileSync(DATA_FILE, 'utf-8');
-  return JSON.parse(data);
+  try {
+    if (!fs.existsSync(DATA_FILE)) {
+      // Return default empty structure if file is completely missing (e.g., failed to initialize)
+      return { properties: [], history: [], kpiData: {}, marketInsights: {} };
+    }
+    const data = fs.readFileSync(DATA_FILE, 'utf-8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error("Failed to read DB:", err);
+    return { properties: [], history: [], kpiData: {}, marketInsights: {} };
+  }
 };
 
 // Helper to write DB
 const writeDb = (data) => {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  } catch (err) {
+    console.warn("Deployment Limitation: Cannot write to filesystem on Vercel. Need external persistent storage.", err.message);
+  }
 };
 
 // Endpoints
@@ -276,6 +293,10 @@ app.post('/api/valuation-report', (req, res) => {
   }, 3500); // 3.5 second delay to simulate AI generation
 });
 
-app.listen(PORT, () => {
-  console.log(`Backend server running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Backend server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
