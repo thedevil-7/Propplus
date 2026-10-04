@@ -3,11 +3,18 @@ export const formatPropertyValue = (value) => {
   
   let num = parseFloat(value);
   
-  // If the value is extremely large, it's likely raw rupees, convert to Lakhs
-  if (num >= 100000) {
-    num = num / 100000;
+  // Convert legacy/current Lakhs format (e.g., 72.50) into raw rupees.
+  // Because property values in India are generally > ₹100,000, 
+  // any `value` less than 100,000 is definitely in Lakhs (or Crores, but currently it's Lakhs).
+  if (num > 0 && num < 100000) {
+    num = num * 100000;
   }
   
-  // Return consistently formatted value in Lakhs
-  return `₹${num.toFixed(2)} Lakhs`;
+  if (num < 10000000) {
+    // Below ₹100 Lakhs (1 Crore) -> Display in Lakhs
+    return `₹${(num / 100000).toFixed(2)} Lakhs`;
+  } else {
+    // ₹100 Lakhs or above -> Convert to Crores
+    return `₹${(num / 10000000).toFixed(2)} Cr`;
+  }
 };

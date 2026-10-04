@@ -69,7 +69,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
       market: 'Vaishali Nagar, Jaipur',
       config: '3 BHK • 1,850 sq.ft',
       price: '₹1,35,00,000',
-      priceTag: '₹135 Lakhs',
+      priceTag: '₹1.35 Cr',
       rate: '₹7,297 / sq.ft',
       confidence: '94% High',
       type: 'villa'
@@ -80,7 +80,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
       market: 'Malviya Nagar, Jaipur',
       config: '4 BHK • 2,420 sq.ft',
       price: '₹2,18,00,000',
-      priceTag: '₹218 Lakhs',
+      priceTag: '₹2.18 Cr',
       rate: '₹9,008 / sq.ft',
       confidence: '91% High',
       type: 'apartment'
@@ -91,7 +91,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
       market: 'C-Scheme, Jaipur',
       config: '3 BHK • 2,100 sq.ft',
       price: '₹2,95,00,000',
-      priceTag: '₹295 Lakhs',
+      priceTag: '₹2.95 Cr',
       rate: '₹14,047 / sq.ft',
       confidence: '88% Solid',
       type: 'penthouse'
@@ -113,7 +113,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
       market: 'Shastri Nagar, Jodhpur',
       config: '4 BHK • 2,800 sq.ft',
       price: '₹1,65,00,000',
-      priceTag: '₹165 Lakhs',
+      priceTag: '₹1.65 Cr',
       rate: '₹5,892 / sq.ft',
       confidence: '92% High',
       type: 'villa'
@@ -444,7 +444,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                   <div style={{ width: '78%', height: '100%', background: '#4169E1' }}></div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: '#40547D' }}>
-                  <span>Range: ₹127 Lakhs — ₹142 Lakhs</span>
+                  <span>Range: ₹1.27 Cr — ₹1.42 Cr</span>
                   <span style={{ color: '#3159C9', fontWeight: 600 }}>R² 0.89 High</span>
                 </div>
               </div>

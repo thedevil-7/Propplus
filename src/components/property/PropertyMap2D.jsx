@@ -7,11 +7,11 @@ import { formatPropertyValue } from '../../utils/formatters';
 const getPropertyPriceCategory = (priceLakhs, localAvgLakhs) => {
   if (!priceLakhs) return { color: '#94a3b8', label: 'Unknown', size: 24, class: 'unknown' };
   
-  if (priceLakhs < 100) return { color: '#10B981', label: 'Lower Price (< 100 Lakhs)', size: 24, class: 'low' }; // Green
-  if (priceLakhs >= 100 && priceLakhs < 200) return { color: '#3B82F6', label: 'Mid Price (100 - 200 Lakhs)', size: 28, class: 'mid' }; // Blue
-  if (priceLakhs >= 200 && priceLakhs < 500) return { color: '#8B5CF6', label: 'Premium (200 - 500 Lakhs)', size: 32, class: 'premium' }; // Purple
-  if (priceLakhs >= 500 && priceLakhs < 1000) return { color: '#F97316', label: 'High-End (500 - 1000 Lakhs)', size: 36, class: 'high' }; // Orange
-  return { color: '#EF4444', label: 'Ultra-Luxury (1000+ Lakhs)', size: 40, class: 'ultra' }; // Red
+  if (priceLakhs < 100) return { color: '#10B981', label: 'Lower Price (< 1 Cr)', size: 24, class: 'low' }; // Green
+  if (priceLakhs >= 100 && priceLakhs < 200) return { color: '#3B82F6', label: 'Mid Price (1 - 2 Cr)', size: 28, class: 'mid' }; // Blue
+  if (priceLakhs >= 200 && priceLakhs < 500) return { color: '#8B5CF6', label: 'Premium (2 - 5 Cr)', size: 32, class: 'premium' }; // Purple
+  if (priceLakhs >= 500 && priceLakhs < 1000) return { color: '#F97316', label: 'High-End (5 - 10 Cr)', size: 36, class: 'high' }; // Orange
+  return { color: '#EF4444', label: 'Ultra-Luxury (10+ Cr)', size: 40, class: 'ultra' }; // Red
 };
 
 // House SVG Icon Component
@@ -252,7 +252,7 @@ export const PropertyMap2D = ({ property, planUsed = 'free' }) => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '12px', background: '#3B82F6', borderRadius: '50%' }}></div> ₹1Cr–₹2Cr</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '12px', background: '#8B5CF6', borderRadius: '50%' }}></div> ₹2Cr–₹5Cr</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '12px', background: '#F97316', borderRadius: '50%' }}></div> ₹5Cr–₹10Cr</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '12px', background: '#EF4444', borderRadius: '50%' }}></div> ₹1000+ Lakhs</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '12px', background: '#EF4444', borderRadius: '50%' }}></div> ₹10+ Cr</div>
           </div>
         </div>
 

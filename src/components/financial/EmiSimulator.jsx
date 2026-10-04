@@ -4,7 +4,13 @@ import { formatPropertyValue } from '../../utils/formatters';
 
 export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
   const isFree = planUsed === 'free';
-  const propertyPrice = property?.predictedValue || 8019000;
+  
+  // Ensure we are working with RAW RUPEES internally.
+  let rawPropertyPrice = property?.predictedValue || 80.19;
+  if (rawPropertyPrice > 0 && rawPropertyPrice < 100000) {
+    rawPropertyPrice = rawPropertyPrice * 100000;
+  }
+  const propertyPrice = rawPropertyPrice;
   
   const [downPaymentPct, setDownPaymentPct] = useState(25);
   const [interestRate, setInterestRate] = useState(8.5);
@@ -15,6 +21,8 @@ export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
   const downPaymentAmount = (propertyPrice * downPaymentPct) / 100;
   const loanAmount = propertyPrice - downPaymentAmount;
 
+  const isValid = propertyPrice > 0 && loanAmount >= 0 && interestRate >= 0 && tenureYears > 0;
+
   // EMI Calculation
   const calculateEMI = (principal, rateAnnual, years) => {
     if (principal <= 0) return 0;
@@ -24,10 +32,10 @@ export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
     return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
   };
 
-  const monthlyEmi = calculateEMI(loanAmount, interestRate, tenureYears);
+  const monthlyEmi = isValid ? calculateEMI(loanAmount, interestRate, tenureYears) : 0;
   const yearlyEmi = monthlyEmi * 12;
-  const totalPayment = monthlyEmi * tenureYears * 12;
-  const totalInterest = totalPayment - loanAmount;
+  const totalPayment = isValid ? (monthlyEmi * tenureYears * 12) : 0;
+  const totalInterest = isValid ? Math.max(0, totalPayment - loanAmount) : 0;
 
   const displayEmi = isYearly ? yearlyEmi : monthlyEmi;
   const displayLabel = isYearly ? '/ year' : '/ month';
@@ -197,10 +205,16 @@ export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
 
           <div style={{ textAlign: 'center', padding: '2rem', background: '#FFFFFF', border: '2px solid var(--primary-100)', borderRadius: '16px', boxShadow: '0 8px 24px rgba(49,89,201,0.08)', marginBottom: '2rem' }}>
             <h3 style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', margin: '0 0 0.5rem 0' }}>Your Estimated EMI</h3>
-            <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--primary-700)', lineHeight: 1.1 }}>
-              ₹{Math.round(displayEmi).toLocaleString('en-IN')}
-            </div>
-            <div style={{ color: 'var(--text-muted)', fontSize: '1rem', marginTop: '0.25rem' }}>{displayLabel}</div>
+            {!isValid ? (
+               <div style={{ fontSize: '1.2rem', fontWeight: 600, color: 'var(--status-negative)' }}>Please provide valid inputs</div>
+            ) : (
+               <>
+                 <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--primary-700)', lineHeight: 1.1 }}>
+                   ₹{Math.round(displayEmi).toLocaleString('en-IN')}
+                 </div>
+                 <div style={{ color: 'var(--text-muted)', fontSize: '1rem', marginTop: '0.25rem' }}>{displayLabel}</div>
+               </>
+            )}
           </div>
 
           {/* Breakdown cards */}
@@ -223,7 +237,7 @@ export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', padding: '1.5rem', background: '#FFFFFF', border: '1px solid var(--border-medium)', borderRadius: '12px' }}>
             <div style={{
               width: '120px', height: '120px', borderRadius: '50%',
-              background: `conic-gradient(#3159C9 0% ${(loanAmount/totalPayment)*100}%, #E11D48 ${(loanAmount/totalPayment)*100}% 100%)`,
+              background: `conic-gradient(#3159C9 0% ${totalPayment > 0 ? (loanAmount/totalPayment)*100 : 0}%, #E11D48 ${totalPayment > 0 ? (loanAmount/totalPayment)*100 : 0}% 100%)`,
               display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}>
               <div style={{ width: '80px', height: '80px', background: '#FFF', borderRadius: '50%' }}></div>
@@ -231,11 +245,11 @@ export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <div style={{ width: '12px', height: '12px', background: '#3159C9', borderRadius: '3px' }}></div>
-                <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Principal ({Math.round((loanAmount/totalPayment)*100)}%)</span>
+                <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Principal ({totalPayment > 0 ? Math.round((loanAmount/totalPayment)*100) : 0}%)</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <div style={{ width: '12px', height: '12px', background: '#E11D48', borderRadius: '3px' }}></div>
-                <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Interest ({Math.round((totalInterest/totalPayment)*100)}%)</span>
+                <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Interest ({totalPayment > 0 ? Math.round((totalInterest/totalPayment)*100) : 0}%)</span>
               </div>
             </div>
           </div>

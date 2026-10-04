@@ -94,7 +94,7 @@ export const MarketInsightsView = () => {
           <div className="chart-header">
             <div>
               <h3 className="chart-title">Average Price by Location</h3>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Average residential property valuation across key regions (in Lakhs)</p>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Average residential property valuation across key regions (in Lakhs / Crores)</p>
             </div>
             <BarChart3 size={18} color="var(--accent-blue)" />
           </div>
@@ -106,7 +106,7 @@ export const MarketInsightsView = () => {
           <div className="chart-header">
             <div>
               <h3 className="chart-title">Historical Price Appreciation Trend</h3>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>5-year average property index progression (in Lakhs)</p>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>5-year average property index progression (in Lakhs / Crores)</p>
             </div>
             <TrendingUp size={18} color="var(--status-positive)" />
           </div>

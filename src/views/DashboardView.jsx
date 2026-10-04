@@ -159,7 +159,7 @@ export const DashboardView = ({
             onClick={() => setCurrentView('predict')}
           >
             <span>AI Valuation &amp; Explainability</span>
-            <span style={{ fontSize: '0.68rem', color: 'var(--accent-blue)', fontWeight: 700, marginLeft: '4px' }}>₹135 Lakhs</span>
+            <span style={{ fontSize: '0.68rem', color: 'var(--accent-blue)', fontWeight: 700, marginLeft: '4px' }}>₹1.35 Cr</span>
           </button>
 
           <button
@@ -247,7 +247,7 @@ export const DashboardView = ({
             {/* Price Row */}
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', marginBottom: '0.5rem' }}>
               <span style={{ fontSize: '2.6rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-                ₹135 Lakhs
+                ₹1.35 Cr
               </span>
               <span style={{
                 display: 'inline-flex',
@@ -268,9 +268,9 @@ export const DashboardView = ({
             {/* Confidence Interval Slider Bar */}
             <div style={{ marginTop: '1.25rem', padding: '1rem', background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.4rem', fontWeight: 600 }}>
-                <span>90% CI • P10: ₹127 Lakhs</span>
-                <span style={{ color: 'var(--accent-blue)' }}>Predicted: ₹135 Lakhs</span>
-                <span>P90: ₹142 Lakhs</span>
+                <span>90% CI • P10: ₹1.27 Cr</span>
+                <span style={{ color: 'var(--accent-blue)' }}>Predicted: ₹1.35 Cr</span>
+                <span>P90: ₹1.42 Cr</span>
               </div>
               <div style={{ position: 'relative', width: '100%', height: '8px', background: 'var(--bg-surface)', borderRadius: '4px', overflow: 'hidden' }}>
                 <div style={{

@@ -18,6 +18,7 @@ import { PricingView } from './views/PricingView';
 
 import { propertyService } from './api/propertyService';
 import { DEMO_PROPERTIES, KPI_DATA } from './api/mockData';
+import { formatPropertyValue } from './utils/formatters';
 import { Search, MapPin, ArrowRight, Settings as SettingsIcon, Sparkles, Box, Layout, Compass, TrendingUp, Building2, History } from 'lucide-react';
 
 import './styles/index.css';
@@ -142,7 +143,7 @@ export function App() {
     if (userRole !== 'customer_premium') {
       setCredits(prev => Math.max(0, prev - 1));
     }
-    showToast(`AI Valuation Complete: ₹${newProp.predictedValue} Lakhs`, 'success');
+    showToast(`AI Valuation Complete: ${formatPropertyValue(newProp.predictedValue)}`, 'success');
   };
 
   const handleDeleteHistoryRecord = async (id) => {
