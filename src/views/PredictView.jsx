@@ -21,6 +21,8 @@ import { AIAnalysisLoading } from '../components/property/AIAnalysisLoading';
 import { AIVision } from '../components/property/AIVision';
 import { FeatureImportanceChart } from '../components/charts/FeatureImportanceChart';
 import { ReportModal } from '../components/property/ReportModal';
+import { PropertyMap2D } from '../components/property/PropertyMap2D';
+import { DynamicFloorPlan } from '../components/architectural/DynamicFloorPlan';
 import { propertyService } from '../api/propertyService';
 import { REGIONAL_LOCALITIES } from '../api/mockData';
 import { fetchIndianCities, getIndianCitiesSync } from '../api/cityService';
@@ -754,6 +756,11 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
               </button>
             </div>
           </div>
+
+          <PropertyMap2D property={predictionResult} planUsed={predictionResult.planUsed} />
+
+          {/* 2D Property Floor Plan (New AI feature) */}
+          <DynamicFloorPlan property={predictionResult} planUsed={predictionResult.planUsed} />
 
           {/* Comparison Delta Cards / Lock screen */}
           <div className="comparison-deltas-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
