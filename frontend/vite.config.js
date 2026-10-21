@@ -4,8 +4,19 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  envDir: '../',
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
+      }
+    }
+  },
   build: {
     target: 'es2020',
+    sourcemap: false,
     cssCodeSplit: true,
     chunkSizeWarningLimit: 800,
     rollupOptions: {

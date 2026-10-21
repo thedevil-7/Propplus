@@ -15,10 +15,24 @@ dist-ssr
 # Environment & Secrets
 .env
 .env.*
+.env.local
+.env.*.local
+frontend/.env
+frontend/.env.*
+frontend/.env.local
+backend/.env
+backend/.env.*
+backend/.env.local
 !.env.example
+!frontend/.env.example
 *.pem
 *.key
 *.cert
+*.secret
+
+# Local Storage DB
+storage/*.json
+!storage/.gitkeep
 
 # Editor directories and files
 .vscode/*

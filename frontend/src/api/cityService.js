@@ -124,12 +124,16 @@ function normalizeCityList(rawList) {
   return normalized.sort((a, b) => a.city.localeCompare(b.city));
 }
 
+// Environment-driven configurations with safe fallbacks
+const PRIMARY_API_URL = import.meta.env?.VITE_CITY_API_URL || "https://indian-cities-api-nocbegfhqg.now.sh/";
+const BACKUP_API_URL = import.meta.env?.VITE_CITY_API_BACKUP_URL || "https://raw.githubusercontent.com/fayazara/Indian-Cities-API/master/db.json";
+
 /**
- * Fetches Indian cities using the requested API endpoint:
- * https://indian-cities-api-nocbegfhqg.now.sh/
- * 
- * Automatically falls back to the official GitHub source repository and offline bundle
- * if network fails, legacy domain is unreachable, or CORS is blocked.
+ * Fetches Indian cities safely:
+ * 1. First attempts secure backend proxy (/api/cities) - keeps secret API keys off the client
+ * 2. Cascades to direct public endpoint if backend is offline
+ * 3. Cascades to GitHub backup dataset
+ * 4. Guaranteed offline fallback dataset
  */
 export async function fetchIndianCities() {
   if (inMemoryCities && inMemoryCities.length > 0) {
@@ -150,13 +154,31 @@ export async function fetchIndianCities() {
     console.warn("Could not read city cache from localStorage", e);
   }
 
-  // 1. Attempt original API requested by user
+  // 1. First attempt: Query secure backend proxy (/api/cities)
+  // This keeps all private credentials completely off the client browser!
   try {
-    const response = await fetch("https://indian-cities-api-nocbegfhqg.now.sh/", {
+    const response = await fetch("/api/cities", {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json"
+      headers: { "Accept": "application/json" }
+    });
+    if (response.ok) {
+      const result = await response.json();
+      const list = result.data || (Array.isArray(result) ? result : []);
+      if (list && list.length > 0) {
+        inMemoryCities = normalizeCityList(list);
+        saveCache(inMemoryCities);
+        return inMemoryCities;
       }
+    }
+  } catch (err) {
+    console.info("Secure backend proxy unavailable, utilizing direct safe fallback...");
+  }
+
+  // 2. Direct public API endpoint fallback
+  try {
+    const response = await fetch(PRIMARY_API_URL, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" }
     });
 
     if (response.ok) {
@@ -164,7 +186,6 @@ export async function fetchIndianCities() {
       // Verify it's valid JSON rather than redirect HTML
       if (text.startsWith("{") || text.startsWith("[")) {
         const data = JSON.parse(text);
-        console.log("Indian Cities API response:", data);
         const list = Array.isArray(data) ? data : (data.cities || []);
         if (list.length > 0) {
           inMemoryCities = normalizeCityList(list);
@@ -174,28 +195,30 @@ export async function fetchIndianCities() {
       }
     }
   } catch (err) {
-    console.info("Indian Cities API (now.sh) unavailable, querying primary dataset source...", err.message);
+    console.info("Primary Indian Cities API unavailable, querying backup...", err.message);
   }
 
-  // 2. Attempt with /cities endpoint
+  // 2. Attempt with /cities sub-endpoint
   try {
-    const response = await fetch("https://indian-cities-api-nocbegfhqg.now.sh/cities", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
+    const base = PRIMARY_API_URL.replace(/\/+$/, '');
+    const citiesUrl = base.endsWith('/cities') ? base : `${base}/cities`;
+    if (citiesUrl !== PRIMARY_API_URL) {
+      const response = await fetch(citiesUrl, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      });
 
-    if (response.ok) {
-      const text = await response.text();
-      if (text.startsWith("{") || text.startsWith("[")) {
-        const data = JSON.parse(text);
-        console.log("Indian Cities API (/cities) response:", data);
-        const list = Array.isArray(data) ? data : (data.cities || []);
-        if (list.length > 0) {
-          inMemoryCities = normalizeCityList(list);
-          saveCache(inMemoryCities);
-          return inMemoryCities;
+      if (response.ok) {
+        const text = await response.text();
+        if (text.startsWith("{") || text.startsWith("[")) {
+          const data = JSON.parse(text);
+          console.log("Indian Cities API (/cities) response:", data);
+          const list = Array.isArray(data) ? data : (data.cities || []);
+          if (list.length > 0) {
+            inMemoryCities = normalizeCityList(list);
+            saveCache(inMemoryCities);
+            return inMemoryCities;
+          }
         }
       }
     }
@@ -203,21 +226,23 @@ export async function fetchIndianCities() {
     // Continue to fallback
   }
 
-  // 3. Query official GitHub raw dataset for fayazara/Indian-Cities-API (db.json)
-  try {
-    const response = await fetch("https://raw.githubusercontent.com/fayazara/Indian-Cities-API/master/db.json");
-    if (response.ok) {
-      const data = await response.json();
-      console.log("Loaded Indian Cities from GitHub raw source dataset:", data?.cities?.length, "cities");
-      const list = data.cities || (Array.isArray(data) ? data : []);
-      if (list.length > 0) {
-        inMemoryCities = normalizeCityList(list);
-        saveCache(inMemoryCities);
-        return inMemoryCities;
+  // 3. Query backup source dataset (e.g. GitHub raw source dataset)
+  if (BACKUP_API_URL) {
+    try {
+      const response = await fetch(BACKUP_API_URL);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Loaded Indian Cities from backup source dataset:", data?.cities?.length || (Array.isArray(data) ? data.length : 0), "cities");
+        const list = data.cities || (Array.isArray(data) ? data : []);
+        if (list.length > 0) {
+          inMemoryCities = normalizeCityList(list);
+          saveCache(inMemoryCities);
+          return inMemoryCities;
+        }
       }
+    } catch (err) {
+      console.warn("Failed to fetch backup city dataset, applying built-in offline dataset", err);
     }
-  } catch (err) {
-    console.warn("Failed to fetch raw db.json, applying built-in offline dataset", err);
   }
 
   // 4. Guaranteed offline fallback dataset
