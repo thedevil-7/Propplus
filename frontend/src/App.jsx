@@ -7,6 +7,7 @@ import { Modal } from './components/common/Modal';
 import { LandingView } from './views/LandingView';
 import { DashboardView } from './views/DashboardView';
 import { PredictView } from './views/PredictView';
+import { FloorPlanView } from './views/FloorPlanView';
 
 import { ComparisonView } from './views/ComparisonView';
 import { SimilarView } from './views/SimilarView';
@@ -101,7 +102,7 @@ export function App() {
 
   // Scroll spy with IntersectionObserver to update active navbar item as user scrolls
   useEffect(() => {
-    const sections = ['landing', 'predict', 'dashboard', 'insights', 'properties', 'pricing', 'history'];
+    const sections = ['landing', 'predict', 'floorplan', 'dashboard', 'insights', 'properties', 'history', 'pricing'];
     const observerOptions = {
       root: null,
       rootMargin: '-20% 0px -60% 0px',
@@ -168,6 +169,7 @@ export function App() {
         theme={theme}
         setTheme={setTheme}
         onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenSettings={() => setIsSettingsOpen(true)}
         userRole={userRole}
         setUserRole={setUserRole}
       />
@@ -220,11 +222,14 @@ export function App() {
 
         <div className="section-divider-line" />
 
-
-
         {/* =================================================================
-            SECTION 4: EXECUTIVE ANALYTICS DASHBOARD (#dashboard)
+            SECTION 3: 2D ARCHITECTURAL FLOOR PLAN (#floorplan)
             ================================================================= */}
+        <section id="floorplan" className="page-scroll-section">
+          <FloorPlanView setCurrentView={scrollToSection} />
+        </section>
+
+        <div className="section-divider-line" />
         <section id="dashboard" className="page-scroll-section">
           <div className="container-xl">
             <div className="section-header-banner">

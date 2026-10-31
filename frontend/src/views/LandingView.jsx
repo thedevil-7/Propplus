@@ -51,10 +51,9 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
     else if (estCity === 'chennai') baseRate = 7400;
     else if (estCity === 'ahmedabad') baseRate = 5800;
 
-    const totalVal = Math.round((areaNum * baseRate) / 100000); // in Lakhs
-    const inCr = totalVal;
+    const totalVal = Math.round(areaNum * baseRate); // numeric INR
     setQuickCalcResult({
-      valueCr: inCr,
+      valueInr: totalVal,
       rateSqft: baseRate,
       confidence: '91.4%',
       city: estCity.toUpperCase(),
@@ -102,7 +101,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
       market: 'Mansarovar Ext, Jaipur',
       config: '3 BHK • 1,600 sq.ft',
       price: '₹98,50,000',
-      priceTag: '₹98.5 L',
+      priceTag: '₹98.5 Lakh',
       rate: '₹6,156 / sq.ft',
       confidence: '96% High',
       type: 'villa'
@@ -266,7 +265,7 @@ export const LandingView = ({ setCurrentView, onSelectDemoProperty }) => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <CheckCircle2 size={18} color="var(--status-positive)" />
                   <span style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>
-                    Algorithmic Model Calibrated: Estimated Base <strong style={{ color: 'var(--status-positive)', fontSize: '1.05rem' }}>{formatPropertyValue(quickCalcResult.valueCr)}</strong> (Confidence {quickCalcResult.confidence})
+                    Algorithmic Model Calibrated: Estimated Base <strong style={{ color: 'var(--status-positive)', fontSize: '1.05rem' }}>{formatPropertyValue(quickCalcResult.valueInr ?? quickCalcResult.valueCr)}</strong> (Confidence {quickCalcResult.confidence})
                   </span>
                 </div>
 

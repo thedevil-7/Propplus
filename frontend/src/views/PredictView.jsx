@@ -72,6 +72,7 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
 
   // Errors state
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState(null);
 
   // Indian Cities API state
   const [citiesList, setCitiesList] = useState(() => getIndianCitiesSync());
@@ -134,10 +135,12 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
 
   const handlePredictSubmit = (e) => {
     e.preventDefault();
+    if (phase === 'loading') return;
+    setApiError(null);
     if (!validateForm()) return;
     
     if (userRole === 'customer_free' && credits <= 0) {
-      alert("You have run out of prediction credits for this month. Please upgrade your plan.");
+      setApiError("You have reached the monthly prediction quota for your Free plan. Please upgrade to Pro or Enterprise.");
       return;
     }
 
@@ -147,6 +150,7 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
 
   const handleLoadingFinished = async () => {
     try {
+      setApiError(null);
       const primaryImg = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80";
       const payload = {
         propertyType,
@@ -170,17 +174,26 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
       };
 
       const res = await propertyService.predictPrice(payload);
+      if (!res || !res.data) {
+        throw new Error("Unable to obtain property valuation from prediction engine.");
+      }
       setPredictionResult(res.data);
       if (onPredictionComplete) onPredictionComplete(res.data);
       setPhase('results');
       
+      // Gentle, contained scroll only if result section is completely out of view
       setTimeout(() => {
         if (resultRef.current) {
-          resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const rect = resultRef.current.getBoundingClientRect();
+          const inView = rect.top >= 0 && rect.top <= window.innerHeight * 0.75;
+          if (!inView) {
+            resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
         }
-      }, 100);
+      }, 150);
     } catch (e) {
-      console.error(e);
+      console.error("Valuation calculation failed:", e);
+      setApiError(e?.message || "Failed to calculate property valuation. Please check inputs and try again.");
       setPhase('form');
     }
   };
@@ -266,10 +279,10 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
                               <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'var(--bg-surface-secondary)', borderRadius: '8px', border: '1px dashed var(--primary-300)' }}>
                                 <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>Live Calculation</div>
                                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary-700)' }}>
-                                  {formatPropertyValue((parseFloat(area) * parseFloat(userPriceSqft)) / 100000)}
+                                  {formatPropertyValue(parseFloat(area) * parseFloat(userPriceSqft))}
                                 </div>
                                 <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                                  {area} sq.ft. × ₹{userPriceSqft} / sq.ft.
+                                  {area} sq.ft. × ₹{Number(userPriceSqft).toLocaleString('en-IN')} / sq.ft
                                 </div>
                               </div>
                             )}
@@ -634,6 +647,14 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
                   )}
                 </div>
 
+                {/* API Error Notification */}
+                {apiError && (
+                  <div style={{ padding: '1rem', background: '#FEF2F2', border: '1px solid #F87171', borderRadius: '8px', color: '#991B1B', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
+                    <ShieldAlert size={20} color="#DC2626" />
+                    <div>{apiError}</div>
+                  </div>
+                )}
+
                 {/* Submit Actions */}
                 <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                   <button type="submit" disabled={phase === 'loading'} className="btn btn-primary btn-lg" style={{ flex: 1, padding: '1.25rem', fontSize: '1.1rem', fontWeight: 700, borderRadius: '8px' }}>
@@ -734,15 +755,15 @@ export const PredictView = ({ onPredictionComplete, setCurrentView, userRole = '
             {predictionResult.pricingMethod !== 'USER_PROVIDED' && (
               <div className="price-range-bar-wrap" style={{ maxWidth: '600px', margin: '0 auto' }}>
                 <div className="range-labels-row" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-                  <span>Lower Bound: ₹{predictionResult.priceRange[0]}L</span>
-                  <span>Upper Bound: ₹{predictionResult.priceRange[1]}L</span>
+                  <span>Lower Bound: {formatPropertyValue(predictionResult.priceRange[0])}</span>
+                  <span>Upper Bound: {formatPropertyValue(predictionResult.priceRange[1])}</span>
                 </div>
                 <div className="range-gradient-track" style={{ height: '8px', background: 'var(--border-medium)', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
                   <div className="range-gradient-fill" style={{ position: 'absolute', top: 0, left: predictionResult.planUsed === 'free' ? '10%' : '20%', right: predictionResult.planUsed === 'free' ? '10%' : '20%', height: '100%', background: 'linear-gradient(90deg, var(--primary-300), var(--primary-600))', borderRadius: '4px' }} />
-                  <div className="range-marker-pin" title={`Median Valuation: ₹${predictionResult.predictedValue}L`} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '16px', height: '16px', background: '#FFFFFF', border: '3px solid var(--primary-600)', borderRadius: '50%', boxShadow: 'var(--shadow-sm)' }} />
+                  <div className="range-marker-pin" title={`Median Valuation: ${formatPropertyValue(predictionResult.predictedValue)}`} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '16px', height: '16px', background: '#FFFFFF', border: '3px solid var(--primary-600)', borderRadius: '50%', boxShadow: 'var(--shadow-sm)' }} />
                 </div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.75rem' }}>
-                  {predictionResult.planUsed === 'free' ? '75% Confidence Valuation Band (Free Version)' : '95% Confidence Valuation Band'} (₹{predictionResult.priceRange[0]}L — ₹{predictionResult.priceRange[1]}L)
+                  {predictionResult.planUsed === 'free' ? '75% Confidence Valuation Band (Free Version)' : '95% Confidence Valuation Band'} ({formatPropertyValue(predictionResult.priceRange[0])} — {formatPropertyValue(predictionResult.priceRange[1])})
                 </div>
               </div>
             )}

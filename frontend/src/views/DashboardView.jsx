@@ -447,7 +447,7 @@ export const DashboardView = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem' }}>
                 <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Average Price</span>
-                <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>₹71.2 Lakhs</span>
+                <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>{formatPropertyValue(7120000)}</span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem' }}>

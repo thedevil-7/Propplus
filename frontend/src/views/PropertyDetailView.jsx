@@ -171,7 +171,7 @@ const PriceHistory = ({ property, priceHistory, setCurrentView }) => {
             {priceHistory.data.map((point, idx) => (
               <div key={idx} style={{ background: 'var(--bg-surface-secondary)', padding: '1rem', borderRadius: '8px', flex: 1, minWidth: '120px', borderLeft: '4px solid var(--accent-blue)' }}>
                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{point.year}</div>
-                 <div style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--primary-700)' }}>₹{point.price}L</div>
+                 <div style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--primary-700)' }}>{formatPropertyValue(point.price)}</div>
               </div>
             ))}
           </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DEMO_PROPERTIES } from '../api/mockData';
 import { Box, Sparkles, Check, ArrowRight } from 'lucide-react';
+import { formatPropertyValue, formatPricePerSqFt } from '../utils/formatters';
 
 export const ComparisonView = ({ onSelectProperty, userRole }) => {
   const isFree = userRole === 'customer_free' || userRole === 'guest';
@@ -8,13 +9,13 @@ export const ComparisonView = ({ onSelectProperty, userRole }) => {
   const [selectedProps, setSelectedProps] = useState(DEMO_PROPERTIES.slice(0, limit));
 
   const features = [
-    { label: "Predicted Price", key: "predictedValue", format: (v) => `₹${v}L` },
+    { label: "Predicted Price", key: "predictedValue", format: (v) => formatPropertyValue(v) },
     { label: "Carpet Area (sq.ft)", key: "area", format: (v) => `${v} sq.ft` },
     { label: "Configuration (BHK)", key: "bedrooms", format: (v) => `${v} BHK` },
     { label: "Bathrooms", key: "bathrooms", format: (v) => `${v} Baths` },
     { label: "Location", key: "location", format: (v) => v },
     { label: "Micro Locality", key: "locality", format: (v) => v },
-    { label: "Price / sq.ft", key: "pricePerSqFt", format: (v) => `₹${v?.toLocaleString()}` },
+    { label: "Price / sq.ft", key: "pricePerSqFt", format: (v) => formatPricePerSqFt(v) },
     { label: "AI Valuation Score", key: "aiScore", format: (v) => `${v}% Confidence` },
     { label: "Furnishing Status", key: "furnishing", format: (v) => v },
     { label: "Covered Parking", key: "parking", format: (v) => `${v} Slots` }
@@ -44,7 +45,7 @@ export const ComparisonView = ({ onSelectProperty, userRole }) => {
               {p.title}
             </h4>
             <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>
-              ₹{p.predictedValue}L
+              {formatPropertyValue(p.predictedValue)}
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>

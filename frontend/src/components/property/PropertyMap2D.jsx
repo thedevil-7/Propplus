@@ -6,11 +6,13 @@ import { formatPropertyValue } from '../../utils/formatters';
 // Price categorization logic
 const getPropertyPriceCategory = (priceLakhs, localAvgLakhs) => {
   if (!priceLakhs) return { color: '#94a3b8', label: 'Unknown', size: 24, class: 'unknown' };
+  const rawNum = typeof priceLakhs === 'number' ? priceLakhs : parseFloat(priceLakhs) || 0;
+  const inLakhs = rawNum >= 100000 ? rawNum / 100000 : rawNum;
   
-  if (priceLakhs < 100) return { color: '#10B981', label: 'Lower Price (< 1 Cr)', size: 24, class: 'low' }; // Green
-  if (priceLakhs >= 100 && priceLakhs < 200) return { color: '#3B82F6', label: 'Mid Price (1 - 2 Cr)', size: 28, class: 'mid' }; // Blue
-  if (priceLakhs >= 200 && priceLakhs < 500) return { color: '#8B5CF6', label: 'Premium (2 - 5 Cr)', size: 32, class: 'premium' }; // Purple
-  if (priceLakhs >= 500 && priceLakhs < 1000) return { color: '#F97316', label: 'High-End (5 - 10 Cr)', size: 36, class: 'high' }; // Orange
+  if (inLakhs < 100) return { color: '#10B981', label: 'Lower Price (< 1 Cr)', size: 24, class: 'low' }; // Green
+  if (inLakhs >= 100 && inLakhs < 200) return { color: '#3B82F6', label: 'Mid Price (1 - 2 Cr)', size: 28, class: 'mid' }; // Blue
+  if (inLakhs >= 200 && inLakhs < 500) return { color: '#8B5CF6', label: 'Premium (2 - 5 Cr)', size: 32, class: 'premium' }; // Purple
+  if (inLakhs >= 500 && inLakhs < 1000) return { color: '#F97316', label: 'High-End (5 - 10 Cr)', size: 36, class: 'high' }; // Orange
   return { color: '#EF4444', label: 'Ultra-Luxury (10+ Cr)', size: 40, class: 'ultra' }; // Red
 };
 
@@ -178,7 +180,7 @@ export const PropertyMap2D = ({ property, planUsed = 'free' }) => {
                     transition: 'all 0.2s',
                     cursor: 'pointer'
                   }}
-                  title={`₹${p.priceLakhs.toFixed(2)}L • ${p.bedrooms} BHK`}
+                  title={`${formatPropertyValue(p.priceLakhs)} • ${p.bedrooms} BHK`}
                 >
                   <HouseIcon size={cat.size} color={cat.color} />
                   {isHovered && (
@@ -210,7 +212,7 @@ export const PropertyMap2D = ({ property, planUsed = 'free' }) => {
                   {selectedProp.isSubject ? 'YOUR PROPERTY' : `PROPERTY #${selectedProp.id.split('-')[1].padStart(3, '0')}`}
                 </div>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-                  ₹{formatPropertyValue(selectedProp.priceLakhs || selectedProp.predictedValue).replace('₹', '')}
+                  {formatPropertyValue(selectedProp.priceLakhs || selectedProp.predictedValue)}
                 </div>
                 <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <span>{selectedProp.bedrooms || property.bedrooms} BHK</span> • 

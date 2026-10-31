@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ShieldAlert } from 'lucide-react';
-import { formatPropertyValue } from '../../utils/formatters';
+import { formatPropertyValue, toNumericInr } from '../../utils/formatters';
 
 export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
   const isFree = planUsed === 'free';
   
-  // Ensure we are working with RAW RUPEES internally.
-  let rawPropertyPrice = property?.predictedValue || 80.19;
-  if (rawPropertyPrice > 0 && rawPropertyPrice < 100000) {
-    rawPropertyPrice = rawPropertyPrice * 100000;
-  }
-  const propertyPrice = rawPropertyPrice;
+  // Ensure we are working with raw numeric INR values internally
+  const propertyPrice = Math.max(0, toNumericInr(property?.predictedValue || 8019000));
   
   const [downPaymentPct, setDownPaymentPct] = useState(25);
   const [interestRate, setInterestRate] = useState(8.5);
@@ -18,30 +14,41 @@ export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
   const [isYearly, setIsYearly] = useState(false);
   const [monthlyIncome, setMonthlyIncome] = useState(170000);
   
-  const downPaymentAmount = (propertyPrice * downPaymentPct) / 100;
-  const loanAmount = propertyPrice - downPaymentAmount;
+  const safeDownPaymentPct = Math.max(0, Math.min(100, Number(downPaymentPct) || 0));
+  const safeInterestRate = Math.max(0, Math.min(40, Number(interestRate) || 0));
+  const safeTenureYears = Math.max(1, Math.min(40, Number(tenureYears) || 20));
+  const safeMonthlyIncome = Math.max(0, Number(monthlyIncome) || 0);
 
-  const isValid = propertyPrice > 0 && loanAmount >= 0 && interestRate >= 0 && tenureYears > 0;
+  const downPaymentAmount = Math.round((propertyPrice * safeDownPaymentPct) / 100);
+  const loanAmount = Math.max(0, propertyPrice - downPaymentAmount);
 
-  // EMI Calculation
+  const isValid = propertyPrice > 0 && loanAmount >= 0 && safeInterestRate >= 0 && safeTenureYears > 0;
+
+  // Standard Banking EMI Calculation: EMI = P × r × (1+r)^n / ((1+r)^n - 1)
   const calculateEMI = (principal, rateAnnual, years) => {
-    if (principal <= 0) return 0;
+    if (principal <= 0 || years <= 0) return 0;
     const r = (rateAnnual / 12) / 100;
-    const n = years * 12;
+    const n = Math.round(years * 12);
+    if (n <= 0) return 0;
+    // Zero-interest loan handling
     if (r === 0) return principal / n;
-    return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    const factor = Math.pow(1 + r, n);
+    if (!isFinite(factor) || factor <= 1) return principal / n;
+    return (principal * r * factor) / (factor - 1);
   };
 
-  const monthlyEmi = isValid ? calculateEMI(loanAmount, interestRate, tenureYears) : 0;
+  const monthlyEmi = isValid ? calculateEMI(loanAmount, safeInterestRate, safeTenureYears) : 0;
   const yearlyEmi = monthlyEmi * 12;
-  const totalPayment = isValid ? (monthlyEmi * tenureYears * 12) : 0;
+  const totalPayment = isValid 
+    ? (loanAmount > 0 ? (safeInterestRate === 0 ? loanAmount : monthlyEmi * safeTenureYears * 12) : 0)
+    : 0;
   const totalInterest = isValid ? Math.max(0, totalPayment - loanAmount) : 0;
 
   const displayEmi = isYearly ? yearlyEmi : monthlyEmi;
   const displayLabel = isYearly ? '/ year' : '/ month';
 
   // Affordability
-  const emiToIncomeRatio = monthlyIncome > 0 ? (monthlyEmi / monthlyIncome) * 100 : 0;
+  const emiToIncomeRatio = safeMonthlyIncome > 0 ? (monthlyEmi / safeMonthlyIncome) * 100 : 0;
   let affordabilityStatus = 'moderate';
   if (emiToIncomeRatio <= 40) affordabilityStatus = 'comfortable';
   else if (emiToIncomeRatio > 50) affordabilityStatus = 'high';
@@ -49,24 +56,32 @@ export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
   const affordabilityScore = useMemo(() => {
     let score = 100;
     score -= Math.max(0, (emiToIncomeRatio - 30)); 
-    score += (downPaymentPct - 20) * 0.5;
+    score += (safeDownPaymentPct - 20) * 0.5;
     return Math.max(10, Math.min(99, Math.round(score)));
-  }, [emiToIncomeRatio, downPaymentPct]);
+  }, [emiToIncomeRatio, safeDownPaymentPct]);
 
   const recommendedBudgetRange = useMemo(() => {
-    // Basic back calculation assuming 40% income goes to EMI
-    const maxEmi = monthlyIncome * 0.4;
-    const r = (interestRate / 12) / 100;
-    const n = tenureYears * 12;
-    const maxLoan = maxEmi * ((Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n)));
-    const maxProperty = maxLoan / (1 - (downPaymentPct / 100));
+    if (safeMonthlyIncome <= 0) return [0, 0];
+    const maxEmi = safeMonthlyIncome * 0.4;
+    const r = (safeInterestRate / 12) / 100;
+    const n = safeTenureYears * 12;
+    let maxLoan = 0;
+    if (r === 0) {
+      maxLoan = maxEmi * n;
+    } else {
+      const factor = Math.pow(1 + r, n);
+      maxLoan = maxEmi * ((factor - 1) / (r * factor));
+    }
+    const maxProperty = safeDownPaymentPct >= 100 
+      ? maxLoan 
+      : maxLoan / (1 - (safeDownPaymentPct / 100));
     const minProperty = maxProperty * 0.85;
-    return [minProperty, maxProperty];
-  }, [monthlyIncome, interestRate, tenureYears, downPaymentPct]);
+    return [Math.round(minProperty), Math.round(maxProperty)];
+  }, [safeMonthlyIncome, safeInterestRate, safeTenureYears, safeDownPaymentPct]);
 
   const nexaInsight = useMemo(() => {
     if (affordabilityStatus === 'comfortable') {
-      return `This property appears comfortably affordable based on your current income and selected loan structure. Your estimated EMI is ${Math.round(emiToIncomeRatio)}% of your monthly income, which is within the selected affordability range.`;
+      return `This property appears comfortably affordable based on your current income and selected loan structure. Your estimated EMI is ${Math.round(emiToIncomeRatio)}% of your monthly income, which is within the recommended affordability range.`;
     } else if (affordabilityStatus === 'high') {
       return `The current loan structure may place a high monthly burden on your income (${Math.round(emiToIncomeRatio)}%). Consider increasing the down payment or selecting a longer tenure.`;
     }
@@ -363,11 +378,11 @@ export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
                 </thead>
                 <tbody>
                   {[10, 20, 30, 40].map(pct => {
-                    const dpAmt = (propertyPrice * pct) / 100;
-                    const lnAmt = propertyPrice - dpAmt;
-                    const e = calculateEMI(lnAmt, interestRate, tenureYears);
+                    const dpAmt = Math.round((propertyPrice * pct) / 100);
+                    const lnAmt = Math.max(0, propertyPrice - dpAmt);
+                    const e = calculateEMI(lnAmt, safeInterestRate, safeTenureYears);
                     return (
-                      <tr key={pct} onClick={() => setDownPaymentPct(pct)} style={{ cursor: 'pointer', background: downPaymentPct === pct ? '#F0F5FF' : '#FFF', borderBottom: '1px solid #E2E8F0' }}>
+                      <tr key={pct} onClick={() => setDownPaymentPct(pct)} style={{ cursor: 'pointer', background: safeDownPaymentPct === pct ? '#F0F5FF' : '#FFF', borderBottom: '1px solid #E2E8F0' }}>
                         <td style={{ padding: '0.75rem 1rem', fontWeight: 500 }}>{formatPropertyValue(dpAmt)} ({pct}%)</td>
                         <td style={{ padding: '0.75rem 1rem' }}>{formatPropertyValue(lnAmt)}</td>
                         <td style={{ padding: '0.75rem 1rem', fontWeight: 600, color: 'var(--primary-700)' }}>₹{Math.round(e).toLocaleString('en-IN')}</td>
@@ -391,11 +406,11 @@ export const EmiSimulator = ({ property, planUsed, setCurrentView }) => {
                 </thead>
                 <tbody>
                   {[10, 15, 20, 25, 30].map(yr => {
-                    const e = calculateEMI(loanAmount, interestRate, yr);
-                    const totPay = e * yr * 12;
-                    const totInt = totPay - loanAmount;
+                    const e = calculateEMI(loanAmount, safeInterestRate, yr);
+                    const totPay = loanAmount > 0 ? (safeInterestRate === 0 ? loanAmount : e * yr * 12) : 0;
+                    const totInt = Math.max(0, totPay - loanAmount);
                     return (
-                      <tr key={yr} onClick={() => setTenureYears(yr)} style={{ cursor: 'pointer', background: tenureYears === yr ? '#F0F5FF' : '#FFF', borderBottom: '1px solid #E2E8F0' }}>
+                      <tr key={yr} onClick={() => setTenureYears(yr)} style={{ cursor: 'pointer', background: safeTenureYears === yr ? '#F0F5FF' : '#FFF', borderBottom: '1px solid #E2E8F0' }}>
                         <td style={{ padding: '0.75rem 1rem', fontWeight: 500 }}>{yr} Years</td>
                         <td style={{ padding: '0.75rem 1rem', fontWeight: 600, color: 'var(--primary-700)' }}>₹{Math.round(e).toLocaleString('en-IN')}</td>
                         <td style={{ padding: '0.75rem 1rem' }}>{formatPropertyValue(totInt)}</td>

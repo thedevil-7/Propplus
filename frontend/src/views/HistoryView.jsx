@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
+import { formatPropertyValue } from '../utils/formatters';
 
 export const HistoryView = ({
   history = [],
@@ -159,7 +160,7 @@ export const HistoryView = ({
                   <td>{item.area} sq.ft</td>
                   <td>{item.bedrooms} BHK</td>
                   <td style={{ fontWeight: 800, color: 'var(--accent-blue)' }}>
-                    ₹{item.predictedValue}L
+                    {formatPropertyValue(item.predictedValue)}
                   </td>
                   <td>
                     <span className="badge badge-ai" style={{ fontSize: '0.7rem' }}>

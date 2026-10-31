@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { formatPropertyValue } from '../../utils/formatters';
 
 export const BarChart = ({ data = [], height = 220 }) => {
   const [hoveredIdx, setHoveredIdx] = useState(null);
@@ -92,7 +93,7 @@ export const BarChart = ({ data = [], height = 220 }) => {
                     fontWeight="700"
                     textAnchor="middle"
                   >
-                    ₹{val}L
+                    {formatPropertyValue(val)}
                   </text>
                 </g>
               )}

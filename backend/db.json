@@ -1,9 +1,555 @@
 {
-  "properties": [],
-  "history": [],
+  "properties": [
+    {
+      "id": "prop-101",
+      "title": "The Glass Pavilion Villa",
+      "type": "Villa",
+      "location": "Jaipur, Rajasthan",
+      "locality": "C-Scheme",
+      "area": 1800,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "floors": 2,
+      "age": 2,
+      "parking": 2,
+      "furnishing": "Furnished",
+      "balcony": true,
+      "amenities": [
+        "Swimming Pool",
+        "Garden",
+        "Security",
+        "Smart Home",
+        "CCTV",
+        "Power Backup"
+      ],
+      "predictedValue": 7250000,
+      "priceRange": [
+        6800000,
+        7700000
+      ],
+      "pricePerSqFt": 4028,
+      "localAvgPricePerSqFt": 3880,
+      "localAvgValue": 6980000,
+      "datePredicted": "2026-09-10",
+      "status": "Verified",
+      "isFavorite": true,
+      "aiScore": 89,
+      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "aiVision": {
+        "detectedType": "Modern Architecture Villa",
+        "exteriorCondition": "Pristine / Good",
+        "bedroomsDetected": 3,
+        "parking": "Detected (2 Car Bay)",
+        "balcony": "Detected (Cantilevered Glass)",
+        "garden": "Detected (Front Landscaped)",
+        "pool": "Detected (Rear Lap Pool)",
+        "exteriorQuality": "High Grade Composite"
+      }
+    },
+    {
+      "id": "prop-102",
+      "title": "Azure Sky Heights",
+      "type": "Apartment",
+      "location": "Jaipur, Rajasthan",
+      "locality": "Malviya Nagar",
+      "area": 1850,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "floors": 14,
+      "age": 1,
+      "parking": 2,
+      "furnishing": "Semi-Furnished",
+      "balcony": true,
+      "amenities": [
+        "Gym",
+        "Lift",
+        "Club House",
+        "Security",
+        "Solar"
+      ],
+      "predictedValue": 7400000,
+      "priceRange": [
+        7100000,
+        7850000
+      ],
+      "pricePerSqFt": 4000,
+      "localAvgPricePerSqFt": 3910,
+      "localAvgValue": 7150000,
+      "datePredicted": "2026-09-08",
+      "status": "Verified",
+      "isFavorite": false,
+      "aiScore": 91,
+      "imageUrl": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "aiVision": {
+        "detectedType": "High-Rise Urban Apartment",
+        "exteriorCondition": "Brand New / Premium",
+        "bedroomsDetected": 3,
+        "parking": "Detected (Covered Basement)",
+        "balcony": "Detected (Double Balcony)",
+        "garden": "Detected (Community Pod)",
+        "pool": "Detected (Rooftop Infinity)",
+        "exteriorQuality": "Curtain Wall Glass"
+      }
+    },
+    {
+      "id": "prop-201",
+      "title": "Sun City Imperial Villa",
+      "type": "Villa",
+      "location": "Jodhpur, Rajasthan",
+      "locality": "Shastri Nagar",
+      "area": 2100,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "floors": 2,
+      "age": 2,
+      "parking": 2,
+      "furnishing": "Furnished",
+      "balcony": true,
+      "amenities": [
+        "Garden",
+        "Security",
+        "Power Backup",
+        "CCTV",
+        "Smart Home",
+        "Solar"
+      ],
+      "predictedValue": 6850000,
+      "priceRange": [
+        6500000,
+        7200000
+      ],
+      "pricePerSqFt": 3262,
+      "localAvgPricePerSqFt": 3180,
+      "localAvgValue": 6680000,
+      "datePredicted": "2026-09-11",
+      "status": "Verified",
+      "isFavorite": true,
+      "aiScore": 92,
+      "imageUrl": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "aiVision": {
+        "detectedType": "Jodhpur Sandstone Contemporary Villa",
+        "exteriorCondition": "Excellent",
+        "bedroomsDetected": 4,
+        "parking": "Detected (Wide Portico)",
+        "balcony": "Detected (Jharokha Style)",
+        "garden": "Detected (Lush Front Lawn)",
+        "pool": "Not Detected",
+        "exteriorQuality": "Carved Natural Sandstone"
+      }
+    },
+    {
+      "id": "prop-202",
+      "title": "Marwar Heights Residence",
+      "type": "Apartment",
+      "location": "Jodhpur, Rajasthan",
+      "locality": "Ratanada",
+      "area": 1600,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "floors": 8,
+      "age": 3,
+      "parking": 1,
+      "furnishing": "Semi-Furnished",
+      "balcony": true,
+      "amenities": [
+        "Lift",
+        "Security",
+        "Power Backup",
+        "CCTV"
+      ],
+      "predictedValue": 5400000,
+      "priceRange": [
+        5150000,
+        5700000
+      ],
+      "pricePerSqFt": 3375,
+      "localAvgPricePerSqFt": 3290,
+      "localAvgValue": 5260000,
+      "datePredicted": "2026-09-09",
+      "status": "Verified",
+      "isFavorite": false,
+      "aiScore": 88,
+      "imageUrl": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "aiVision": {
+        "detectedType": "Mid-Rise Residential Complex",
+        "exteriorCondition": "Well Maintained",
+        "bedroomsDetected": 3,
+        "parking": "Detected (Stilt Parking)",
+        "balcony": "Detected",
+        "garden": "Detected (Podium)",
+        "pool": "Not Detected",
+        "exteriorQuality": "Stucco & Stone Clad"
+      }
+    },
+    {
+      "id": "prop-301",
+      "title": "Chambal Vista Executive Home",
+      "type": "Independent House",
+      "location": "Kota, Rajasthan",
+      "locality": "Talwandi",
+      "area": 1900,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "floors": 2,
+      "age": 3,
+      "parking": 2,
+      "furnishing": "Furnished",
+      "balcony": true,
+      "amenities": [
+        "Security",
+        "Power Backup",
+        "Garden",
+        "CCTV",
+        "Parking"
+      ],
+      "predictedValue": 5250000,
+      "priceRange": [
+        4950000,
+        5580000
+      ],
+      "pricePerSqFt": 2763,
+      "localAvgPricePerSqFt": 2680,
+      "localAvgValue": 5090000,
+      "datePredicted": "2026-09-10",
+      "status": "Verified",
+      "isFavorite": true,
+      "aiScore": 90,
+      "imageUrl": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "aiVision": {
+        "detectedType": "Modern Independent Duplex",
+        "exteriorCondition": "Good Condition",
+        "bedroomsDetected": 3,
+        "parking": "Detected (Driveway)",
+        "balcony": "Detected (Upper Terrace)",
+        "garden": "Detected (Courtyard)",
+        "pool": "Not Detected",
+        "exteriorQuality": "Textured Weatherproof Paint"
+      }
+    },
+    {
+      "id": "prop-302",
+      "title": "Riverfront Green Residency",
+      "type": "Apartment",
+      "location": "Kota, Rajasthan",
+      "locality": "Kunhari",
+      "area": 1350,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "floors": 10,
+      "age": 1,
+      "parking": 1,
+      "furnishing": "Semi-Furnished",
+      "balcony": true,
+      "amenities": [
+        "Gym",
+        "Lift",
+        "Security",
+        "CCTV",
+        "Club House"
+      ],
+      "predictedValue": 3680000,
+      "priceRange": [
+        3450000,
+        3900000
+      ],
+      "pricePerSqFt": 2725,
+      "localAvgPricePerSqFt": 2640,
+      "localAvgValue": 3560000,
+      "datePredicted": "2026-09-06",
+      "status": "Verified",
+      "isFavorite": false,
+      "aiScore": 87,
+      "imageUrl": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "aiVision": {
+        "detectedType": "Contemporary High-Rise Tower",
+        "exteriorCondition": "New Construction",
+        "bedroomsDetected": 2,
+        "parking": "Detected (Basement)",
+        "balcony": "Detected",
+        "garden": "Detected",
+        "pool": "Detected",
+        "exteriorQuality": "High Grade Exterior Finish"
+      }
+    },
+    {
+      "id": "prop-103",
+      "title": "Heritage Courtyard Enclave",
+      "type": "Independent House",
+      "location": "Jaipur, Rajasthan",
+      "locality": "Vaishali Nagar",
+      "area": 1700,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "floors": 2,
+      "age": 4,
+      "parking": 1,
+      "furnishing": "Unfurnished",
+      "balcony": true,
+      "amenities": [
+        "Security",
+        "Power Backup",
+        "Garden",
+        "CCTV"
+      ],
+      "predictedValue": 6800000,
+      "priceRange": [
+        6450000,
+        7200000
+      ],
+      "pricePerSqFt": 4000,
+      "localAvgPricePerSqFt": 3820,
+      "localAvgValue": 6620000,
+      "datePredicted": "2026-09-04",
+      "status": "Verified",
+      "isFavorite": false,
+      "aiScore": 86,
+      "imageUrl": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "aiVision": {
+        "detectedType": "Heritage Contemporary Synthesis",
+        "exteriorCondition": "Good",
+        "bedroomsDetected": 3,
+        "parking": "Detected",
+        "balcony": "Detected",
+        "garden": "Detected",
+        "pool": "Not Detected",
+        "exteriorQuality": "Standard Brick & Lime Finish"
+      }
+    }
+  ],
+  "history": [
+    {
+      "id": "prop-1793452100922",
+      "title": "3 BHK Villa",
+      "type": "Villa",
+      "location": "Jaipur, Rajasthan",
+      "locality": "C-Scheme",
+      "area": 1800,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "floors": 2,
+      "age": 2,
+      "parking": 2,
+      "furnishing": "Furnished",
+      "balcony": true,
+      "amenities": [
+        "Swimming Pool",
+        "Garden",
+        "Security",
+        "Smart Home",
+        "CCTV",
+        "Power Backup"
+      ],
+      "predictedValue": 10764400,
+      "priceRange": [
+        10333824,
+        11194976
+      ],
+      "pricePerSqFt": 5808,
+      "localAvgPricePerSqFt": 4263,
+      "localAvgValue": 7673400,
+      "pricingMethod": "AI_ESTIMATE",
+      "userPriceSqft": null,
+      "datePredicted": "2026-10-31",
+      "status": "AI Predicted",
+      "isFavorite": false,
+      "aiScore": 96,
+      "confidenceLevel": "High Precision Model (±4% Range)",
+      "planUsed": "premium",
+      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1600566753086-00f18efc2291?auto=format&fit=crop&w=800&q=80"
+      ],
+      "valuationFactors": {
+        "baseRatePerSqFt": 4350,
+        "cityBaseRate": 3900,
+        "localityAdjustment": 450,
+        "typeMultiplier": 1.15,
+        "ageDepreciationPercent": -3,
+        "configBonusPerSqFt": 305,
+        "furnishingBonusPerSqFt": 350,
+        "amenitiesCapitalValue": 310000,
+        "dataLimitationNote": "Micro-market transactional records and locality index actively calibrated."
+      }
+    },
+    {
+      "id": "prop-1793449705982",
+      "title": "3 BHK Apartment",
+      "type": "Apartment",
+      "location": "Jaipur, Rajasthan",
+      "locality": "C-Scheme",
+      "area": 1500,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "floors": 1,
+      "age": 2,
+      "parking": 1,
+      "furnishing": "Furnished",
+      "balcony": false,
+      "amenities": [
+        "Security",
+        "Power Backup",
+        "CCTV"
+      ],
+      "predictedValue": 7614000,
+      "priceRange": [
+        7309440,
+        7918560
+      ],
+      "pricePerSqFt": 5076,
+      "localAvgPricePerSqFt": 4263,
+      "localAvgValue": 6394500,
+      "pricingMethod": "AI_ESTIMATE",
+      "userPriceSqft": null,
+      "datePredicted": "2026-10-31",
+      "status": "AI Predicted",
+      "isFavorite": false,
+      "aiScore": 93,
+      "confidenceLevel": "High Precision Model (±4% Range)",
+      "planUsed": "premium",
+      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1600566753086-00f18efc2291?auto=format&fit=crop&w=800&q=80"
+      ],
+      "valuationFactors": {
+        "baseRatePerSqFt": 4350,
+        "cityBaseRate": 3900,
+        "localityAdjustment": 450,
+        "typeMultiplier": 1,
+        "ageDepreciationPercent": -3,
+        "configBonusPerSqFt": 245,
+        "furnishingBonusPerSqFt": 350,
+        "amenitiesCapitalValue": 0,
+        "dataLimitationNote": "Micro-market transactional records and locality index actively calibrated."
+      }
+    },
+    {
+      "id": "prop-1793448579223",
+      "title": "3 BHK Apartment",
+      "type": "Apartment",
+      "location": "Jaipur, Rajasthan",
+      "locality": "C-Scheme",
+      "area": 1500,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "floors": 1,
+      "age": 2,
+      "parking": 1,
+      "furnishing": "Furnished",
+      "balcony": false,
+      "amenities": [
+        "Security",
+        "Power Backup",
+        "CCTV"
+      ],
+      "predictedValue": 7614000,
+      "priceRange": [
+        7309440,
+        7918560
+      ],
+      "pricePerSqFt": 5076,
+      "localAvgPricePerSqFt": 4263,
+      "localAvgValue": 6394500,
+      "pricingMethod": "AI_ESTIMATE",
+      "userPriceSqft": null,
+      "datePredicted": "2026-10-31",
+      "status": "AI Predicted",
+      "isFavorite": false,
+      "aiScore": 93,
+      "confidenceLevel": "High Precision Model (±4% Range)",
+      "planUsed": "premium",
+      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1600566753086-00f18efc2291?auto=format&fit=crop&w=800&q=80"
+      ],
+      "valuationFactors": {
+        "baseRatePerSqFt": 4350,
+        "cityBaseRate": 3900,
+        "localityAdjustment": 450,
+        "typeMultiplier": 1,
+        "ageDepreciationPercent": -3,
+        "configBonusPerSqFt": 245,
+        "furnishingBonusPerSqFt": 350,
+        "amenitiesCapitalValue": 0,
+        "dataLimitationNote": "Micro-market transactional records and locality index actively calibrated."
+      }
+    },
+    {
+      "id": "prop-1792571372470",
+      "title": "3 BHK Villa",
+      "type": "Villa",
+      "location": "Jaipur, Rajasthan",
+      "locality": "C-Scheme",
+      "area": 1500,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "floors": 2,
+      "age": 1,
+      "parking": 2,
+      "furnishing": "Furnished",
+      "balcony": false,
+      "amenities": [
+        "Security",
+        "Power Backup",
+        "CCTV"
+      ],
+      "predictedValue": 6113000,
+      "priceRange": [
+        5746000,
+        6480000
+      ],
+      "pricePerSqFt": 3955,
+      "localAvgPricePerSqFt": 3797,
+      "localAvgValue": 5868000,
+      "pricingMethod": "AI_ESTIMATE",
+      "datePredicted": "2026-10-21",
+      "status": "AI Predicted",
+      "isFavorite": false,
+      "aiScore": 86,
+      "confidenceLevel": "High",
+      "planUsed": "premium",
+      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1600566753086-00f18efc2291?auto=format&fit=crop&w=800&q=80"
+      ]
+    }
+  ],
   "kpiData": {
-    "totalValuations": 14320,
-    "avgAccuracy": 94.2,
+    "totalValuations": 14619,
+    "avgAccuracy": 91.3,
     "activeModels": 3,
     "systemStatus": "Optimal"
   },
@@ -11,27 +557,27 @@
     "trend": [
       {
         "year": "2021",
-        "price": 46
+        "price": 4600000
       },
       {
         "year": "2022",
-        "price": 51
+        "price": 5100000
       },
       {
         "year": "2023",
-        "price": 56
+        "price": 5600000
       },
       {
         "year": "2024",
-        "price": 61
+        "price": 6100000
       },
       {
         "year": "2025",
-        "price": 66
+        "price": 6600000
       },
       {
         "year": "2026 (Now)",
-        "price": 71.2
+        "price": 7120000
       }
     ],
     "regionalGrowth": [

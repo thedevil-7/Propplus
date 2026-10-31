@@ -2,6 +2,7 @@
   "name": "proppluse-root",
   "private": true,
   "scripts": {
+    "start": "node backend/server.js",
     "dev": "cd frontend && npm run dev",
     "server": "cd backend && node server.js",
     "install": "cd frontend && npm install && cd ../backend && npm install",

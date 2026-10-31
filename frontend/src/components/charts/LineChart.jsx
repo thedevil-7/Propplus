@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { formatPropertyValue } from '../../utils/formatters';
 
 export const LineChart = ({ data = [], isArea = false, height = 220, unit = "₹" }) => {
   const [hoveredPoint, setHoveredPoint] = useState(null);
@@ -119,7 +120,7 @@ export const LineChart = ({ data = [], isArea = false, height = 220, unit = "₹
                   fontWeight="700"
                   textAnchor="middle"
                 >
-                  {unit}{pt.val}
+                  {unit === '₹' ? (pt.val >= 100000 ? formatPropertyValue(pt.val) : `₹${Math.round(pt.val).toLocaleString('en-IN')}`) : `${pt.val}${unit}`}
                 </text>
               </g>
             )}

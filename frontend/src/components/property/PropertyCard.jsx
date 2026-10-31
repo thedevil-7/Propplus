@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Bed, Bath, Maximize, Heart, Box, ArrowUpRight } from 'lucide-react';
+import { formatPropertyValue, formatPricePerSqFt } from '../../utils/formatters';
 
 export const PropertyCard = ({
   property,
@@ -70,16 +71,14 @@ export const PropertyCard = ({
         <div className="property-card-footer">
           <div>
             <div className="property-card-price">
-              ₹{property?.predictedValue?.toFixed(1) || "72.5"}L
+              {formatPropertyValue(property?.predictedValue)}
             </div>
             <div className="property-card-psqft">
-              ₹{property?.pricePerSqFt?.toLocaleString() || "4,028"} / sq.ft
+              {formatPricePerSqFt(property?.pricePerSqFt || 4028)}
             </div>
           </div>
 
           <div style={{ display: 'flex', gap: '0.4rem' }}>
-
-
             <button
               className="icon-button"
               style={{ width: '32px', height: '32px' }}

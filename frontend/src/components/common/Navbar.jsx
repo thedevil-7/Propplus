@@ -23,6 +23,7 @@ export const Navbar = ({
   theme,
   setTheme,
   onOpenSearch,
+  onOpenSettings,
   unreadNotifications = 2,
   userRole,
   setUserRole
@@ -128,7 +129,7 @@ export const Navbar = ({
 
             <button
               className="icon-button hide-mobile"
-              onClick={() => handleNavClick('settings')}
+              onClick={() => (onOpenSettings ? onOpenSettings() : handleNavClick('landing'))}
               title="Notifications"
               aria-label="Notifications"
             >
@@ -141,7 +142,7 @@ export const Navbar = ({
             <div
               className="user-avatar"
               style={{ cursor: 'pointer' }}
-              onClick={() => handleNavClick('settings')}
+              onClick={() => (onOpenSettings ? onOpenSettings() : handleNavClick('landing'))}
               title="User Settings"
             >
               AI
@@ -187,7 +188,10 @@ export const Navbar = ({
             <button
               className="nav-link-btn"
               style={{ width: '100%', padding: '0.85rem 1rem', justifyContent: 'flex-start' }}
-              onClick={() => handleNavClick('settings')}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                if (onOpenSettings) onOpenSettings();
+              }}
             >
               <Settings size={18} />
               <span>Settings & Profile</span>
